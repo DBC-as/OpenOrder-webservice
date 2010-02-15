@@ -1,0 +1,69 @@
+; inifile for OpenOrder
+
+[setup]
+
+version = 0.1
+
+; validate
+;validate[request] = openorder.xsd
+;validate[response] = openorder.xsd
+
+; soapActions and their corresponding request structure
+; Can be found in the wsdl but is stated here for convenience
+soapAction[checkOrderPolicy] = checkOrderPolicyRequest
+soapAction[placeOrder] = placeOrderRequest
+
+; prefixes and namespaces
+xmlns[NONE] = http://oss.dbc.dk/ns/openorder
+
+; path to xml-examples
+xmldir = ./xml
+
+; logfile for verbose output
+logfile = /tmp/openorder.log
+
+; set verboselevel
+;   WARNING - simple warnings
+;   ERROR   - errors in response
+;   FATAL   - major errors
+;   STAT    - Statístical logging
+;   TIMER   - timer logging
+;   TRACE   - program trace
+;   DEBUG   - debugging info
+;   Z3959   - calls to z3950 services
+;   OCI     - oracle
+verbose = WARNING+ERROR+FATAL+STAT+TIMER+TRACE+DEBUG+Z3950+OCI
+
+[rest]
+; REST parameters for SOAPAction
+;
+; use xml.path.to.par notation to solve name-conflicts
+; action[thisSoapAction][foo][] = some.number
+; action[thisSoapAction][bar][] = another.number
+; to build
+; <thisSoapAction>
+;   <foo>
+;     <number>nn</number>
+;   </foo>
+;   <bar>
+;     <number>mm</number>
+;   </bar>
+; </thisSoapAction>
+; from url: action=thisSoapAction&some.number=nn&another.number=mm
+;
+; action[ALL] defines parameter used in all defined soap-actions
+;
+action[ALL][] = outputType
+action[ALL][] = callback
+
+action[checkOrderPolicy][] = bibliographicRecordId´
+action[checkOrderPolicy][] = pickUpAgencyId
+action[checkOrderPolicy][] = serviceRequester
+
+action[placeOrder][] = 
+
+[howru]
+;test[] = search&query=danmark&stepValue=1
+;preg_match[] = hitCount
+;error[] = ERROR searching for danmark
+
