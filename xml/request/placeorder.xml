@@ -1,6 +1,5 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:oo="http://oss.dbc.dk/ns/openorder">
-   <soapenv:Header/>
-   <soapenv:Body>
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:oo="http://oss.dbc.dk/ns/openorder"><SOAP-ENV:Body>
       <oo:placeOrderRequest>
          <oo:author>?</oo:author>
          <oo:authorOfComponent>?</oo:authorOfComponent>
@@ -8,19 +7,19 @@
          <oo:bibliographicRecordAgencyId>?</oo:bibliographicRecordAgencyId>
          <oo:bibliographicRecordId>?</oo:bibliographicRecordId>
          <oo:callNumber>?</oo:callNumber>
-         <oo:copy>?</oo:copy>
+         <oo:copy>true</oo:copy>
          <oo:edition>?</oo:edition>
-         <oo:exactEdition>?</oo:exactEdition>
+         <oo:exactEdition>true</oo:exactEdition>
          <oo:isbn>?</oo:isbn>
          <oo:issn>?</oo:issn>
          <oo:issue>?</oo:issue>
          <oo:itemId>?</oo:itemId>
          <oo:language>?</oo:language>
          <oo:localHoldingsId>?</oo:localHoldingsId>
-         <oo:mediumType>?</oo:mediumType>
-         <oo:needBeforeDate>?</oo:needBeforeDate>
+         <oo:mediumType>book</oo:mediumType>
+         <oo:needBeforeDate>2010-10-10</oo:needBeforeDate>
          <oo:orderId>?</oo:orderId>
-         <oo:orderSystem>?</oo:orderSystem>
+         <oo:orderSystem>netpunkt</oo:orderSystem>
          <oo:pagination>?</oo:pagination>
          <oo:pickUpAgencyId>?</oo:pickUpAgencyId>
          <oo:placeOfPublication>?</oo:placeOfPublication>
@@ -35,14 +34,13 @@
          <oo:userAgencyId>?</oo:userAgencyId>
          <oo:userDateOfBirth>?</oo:userDateOfBirth>
          <oo:userId>?</oo:userId>
-         <oo:userIdAuthenticated>?</oo:userIdAuthenticated>
-         <oo:userIdType>?</oo:userIdType>
+         <oo:userIdAuthenticated>false</oo:userIdAuthenticated>
+         <oo:userIdType>cpr</oo:userIdType>
          <oo:userMail>?</oo:userMail>
          <oo:userName>?</oo:userName>
          <oo:userReferenceSource>?</oo:userReferenceSource>
          <oo:userTelephone>?</oo:userTelephone>
-         <oo:verificationReferenceSource>?</oo:verificationReferenceSource>
+         <oo:verificationReferenceSource>danbib</oo:verificationReferenceSource>
          <oo:volume>?</oo:volume>
       </oo:placeOrderRequest>
-   </soapenv:Body>
-</soapenv:Envelope>
+</SOAP-ENV:Body></SOAP-ENV:Envelope>

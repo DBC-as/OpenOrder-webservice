@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:oo="http://oss.dbc.dk/ns/openorder">
-   <soapenv:Header/>
    <soapenv:Body>
       <oo:checkOrderPolicyRequest>
          <oo:bibliographicRecordId>?</oo:bibliographicRecordId>

@@ -5,6 +5,7 @@
 version = 0.1
 
 ; validate
+;validate[soap_request] = soap.xsd
 ;validate[request] = openorder.xsd
 ;validate[response] = openorder.xsd
 
@@ -21,6 +22,8 @@ xmldir = ./xml
 
 ; logfile for verbose output
 logfile = /tmp/openorder.log
+
+order_credentials = some_user/some_pwd@some.server.dbc.dk
 
 ; set verboselevel
 ;   WARNING - simple warnings
