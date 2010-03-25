@@ -122,14 +122,14 @@ class openOrder extends webServiceServer {
       $this->add_ubf_node($ubf, $order, "publicationDateOfComponent", $param->publicationDateOfComponent->_value);
       $this->add_ubf_node($ubf, $order, "publisher", $param->publisher->_value);		// ??
       $this->add_ubf_node($ubf, $order, "seriesTitelNumber", $param->seriesTitelNumber->_value);
-      $this->add_ubf_node($ubf, $order, "serviceRequester", $param->serviceRequester->_value);		// ??
       $this->add_ubf_node($ubf, $order, "title", $param->title->_value);
       $this->add_ubf_node($ubf, $order, "titleOfComponent", $param->titleOfComponent->_value);
       $this->add_ubf_node($ubf, $order, "userAddress", $param->userAddress->_value);
       $this->add_ubf_node($ubf, $order, "userAgencyId", $param->userAgencyId->_value);		// ??
       $this->add_ubf_node($ubf, $order, "userDateOfBirth", $param->userDateOfBirth->_value);
       $this->add_ubf_node($ubf, $order, "userId", $param->userId->_value);
-      $this->add_ubf_node($ubf, $order, "userIdAuthenticated", $param->userIdAuthenticated->_value);
+      if ($param->userId->_value)
+        $this->add_ubf_node($ubf, $order, "userIdAuthenticated", $this->xs_boolean($param->userIdAuthenticated->_value) ? "yes" : "no");
       $this->add_ubf_node($ubf, $order, "userIdType", $param->userIdType->_value);
       $this->add_ubf_node($ubf, $order, "userMail", $param->userMail->_value);
       $this->add_ubf_node($ubf, $order, "userName", $param->userName->_value);
@@ -140,23 +140,28 @@ class openOrder extends webServiceServer {
 
       $ubf_xml = $ubf->saveXML();
       //echo "ubf: <pre>" . $ubf_xml . "</pre>\n";
-  // send ubf-itemorder via z3950
-      $this->watch->start("xml_update");
-      $z3950 = new z3950();
-      $z3950->set_authentication($this->config->get_value("es_authentication", "setup"), $_SERVER["REMOTE_ADDR"]);
-      $z3950->set_target($this->config->get_value("es_target", "setup"));
-      $tgt_ref = $z3950->z3950_xml_itemorder($ubf_xml, $this->config->get_value("es_timeout", "setup"));
-      $this->watch->stop("xml_update");
-      if ($tgt_ref = $tgt_ref['targetReference']) {
-        $por->orderPlaced->_value->orderId->_value = $tgt_ref;
-        $por->orderPlaced->_value->orderPlacesMessage->_value = "item available at pickupAgency, order accepted";
+      if ($this->validate["ubf"] && !$this->validate_xml($ubf_xml, $this->validate["ubf"])) {
+          $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
+          $por->orderNotPlaced->_value->placeOrderError->_value = "Order does not validate";
       } else {
-        verbose::log(ERROR, "openorder:: xml_itemorder status: " . $z3950->get_error_string());
-        $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
-        $por->orderNotPlaced->_value->placeOrderError->_value = "Error sending order to ORS";
+  // send ubf-itemorder via z3950
+        $this->watch->start("xml_update");
+        $z3950 = new z3950();
+        $z3950->set_authentication($this->config->get_value("es_authentication", "setup"), $_SERVER["REMOTE_ADDR"]);
+        $z3950->set_target($this->config->get_value("es_target", "setup"));
+        $tgt_ref = $z3950->z3950_xml_itemorder($ubf_xml, $this->config->get_value("es_timeout", "setup"));
+        $this->watch->stop("xml_update");
+        if ($tgt_ref = $tgt_ref['targetReference']) {
+          $por->orderPlaced->_value->orderId->_value = $tgt_ref;
+          $por->orderPlaced->_value->orderPlacesMessage->_value = "item available at pickupAgency, order accepted";
+        } else {
+          verbose::log(ERROR, "openorder:: xml_itemorder status: " . $z3950->get_error_string());
+          $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
+          $por->orderNotPlaced->_value->placeOrderError->_value = "Error sending order to ORS";
+        }
+        //var_dump($tgt_ref);
+        //var_dump($z3950->get_error());
       }
-      //var_dump($tgt_ref);
-      //var_dump($z3950->get_error());
 
 
     }
@@ -216,6 +221,13 @@ class openOrder extends webServiceServer {
     return $ret;
   }
 
+
+ /** \brief
+  *  return true if xs:boolean is so
+  */
+  private function xs_boolean($str) {
+    return (strtolower($str) == "true" || $str == 1);
+  }
 
  /** \brief
   *  return only digits, so something like DK-710100 returns 710100
