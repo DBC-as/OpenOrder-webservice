@@ -27,14 +27,13 @@
          <oo:publicationDateOfComponent></oo:publicationDateOfComponent>
          <oo:publisher></oo:publisher>
          <oo:seriesTitelNumber></oo:seriesTitelNumber>
-         <oo:serviceRequester>150013</oo:serviceRequester>
          <oo:title></oo:title>
          <oo:titleOfComponent></oo:titleOfComponent>
          <oo:userAddress></oo:userAddress>
          <oo:userAgencyId></oo:userAgencyId>
          <oo:userDateOfBirth></oo:userDateOfBirth>
          <oo:userId>1231231230</oo:userId>
-         <oo:userIdAuthenticated>true</oo:userIdAuthenticated>
+         <oo:userIdAuthenticated>yes</oo:userIdAuthenticated>
          <oo:userIdType>cpr</oo:userIdType>
          <oo:userMail></oo:userMail>
          <oo:userName></oo:userName>
