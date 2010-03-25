@@ -49,3 +49,10 @@ Copy openorder.wsdl_INSTALL to openorder.wsdl and modify
 the location of the service (at the end of the file)
 
 Consider copying robots.txt_INSTALL to robots.txt
+
+
+In the php_exec-catalog the esgaroth_wrapper must be placed. It could look something like:
+
+#!/bin/sh
+/usr/www-local/esgaroth-orderpolicy/bin/esgaroth-shell --search "builtin: plugin: file:/usr/www-local/esgaroth-orderpolicy/esgaroth-lib file:/usr/www-local/esgaroth-orderpolicy/jslib-lib file:/usr/www-local/esgaroth-orderpolicy/esgaroth-config" /usr/www-local/esgaroth-orderpolicy/esgaroth-script/orderpolicy.js $1 $2 1> /dev/null 2> /dev/null
+
