@@ -7,6 +7,7 @@ version = 0.1
 ; validate
 ;validate[soap_request] = soap.xsd
 ;validate[request] = openorder.xsd
+;validate[soap_response] = soap.xsd
 ;validate[response] = openorder.xsd
 
 ; soapActions and their corresponding request structure
@@ -17,13 +18,24 @@ soapAction[placeOrder] = placeOrderRequest
 ; prefixes and namespaces
 xmlns[NONE] = http://oss.dbc.dk/ns/openorder
 
+;Extend Service target
+es_target = some_es_target
+es_authentication = user/group/password
+es_timeout = 30
+
+; esgaroth script
+esgaroth_wrapper = /var/www/php_exec/EsgarothShell
+
+; path to temp-dir where writing/reading/deleting files are allowed
+tmp_path = /tmp/
+
 ; path to xml-examples
 xmldir = ./xml
 
 ; logfile for verbose output
 logfile = /tmp/openorder.log
 
-order_credentials = some_user/some_pwd@some.server.dbc.dk
+order_credentials = ora_user/ora_passwd@some.server.dk
 
 ; set verboselevel
 ;   WARNING - simple warnings
@@ -36,6 +48,9 @@ order_credentials = some_user/some_pwd@some.server.dbc.dk
 ;   Z3959   - calls to z3950 services
 ;   OCI     - oracle
 verbose = WARNING+ERROR+FATAL+STAT+TIMER+TRACE+DEBUG+Z3950+OCI
+
+; format for automatic timer dump %s is the soap-action used
+dump_timer = openorder(%s)
 
 [rest]
 ; REST parameters for SOAPAction
@@ -54,19 +69,17 @@ verbose = WARNING+ERROR+FATAL+STAT+TIMER+TRACE+DEBUG+Z3950+OCI
 ; </thisSoapAction>
 ; from url: action=thisSoapAction&some.number=nn&another.number=mm
 ;
-; action[ALL] defines parameter used in all defined soap-actions
-;
-action[ALL][] = outputType
-action[ALL][] = callback
 
-action[checkOrderPolicy][] = bibliographicRecordId´
+action[checkOrderPolicy][] = bibliographicRecordId
 action[checkOrderPolicy][] = pickUpAgencyId
 action[checkOrderPolicy][] = serviceRequester
+action[checkOrderPolicy][] = outputType
+action[checkOrderPolicy][] = callback
 
-action[placeOrder][] = 
+;action[placeOrder][] = 
 
 [howru]
-;test[] = search&query=danmark&stepValue=1
-;preg_match[] = hitCount
-;error[] = ERROR searching for danmark
+;test[] = checkOrderPolicy&bibliographicRecordId=27670768&pickUpAgencyId=716301&serviceRequester=150013
+;preg_match[] = orderPossible
+;error[] = ERROR checkOrderPolicy for 716301
 
