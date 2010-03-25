@@ -449,6 +449,7 @@
 			<xs:enumeration value="user not found"/>
 			<xs:enumeration value="item can only be ordered directly from library"/>
 			<xs:enumeration value="Order does not validate"/>
+			<xs:enumeration value="Error sending order to ORS"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="userIdTypeType">
