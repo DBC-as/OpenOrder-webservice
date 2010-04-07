@@ -9,6 +9,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="oo:authentication" minOccurs="0"/>
 				<xs:element ref="oo:bibliographicRecordId"/>
 				<xs:element ref="oo:pickUpAgencyId"/>
 				<xs:element ref="oo:serviceRequester"/>
@@ -40,6 +41,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="oo:authentication" minOccurs="0"/>
 				<xs:element ref="oo:author" minOccurs="0"/>
 				<xs:element ref="oo:authorOfComponent" minOccurs="0"/>
 				<xs:element ref="oo:bibliographicCategory" minOccurs="0"/>
@@ -123,6 +125,18 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="authentication">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Parameters used for authentication purposes</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="oo:groupIdAut"/>
+				<xs:element ref="oo:passwordAut"/>
+				<xs:element ref="oo:userIdAut"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="author" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Author-data (monographs) in orders without locations.</xs:documentation>
@@ -176,6 +190,11 @@
 	<xs:element name="exactEdition" type="xs:boolean">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Boolean stating whether only the requested edition of the item can be used, or if any available edition can be used.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="groupIdAut">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Identifier of the group (most often a library number) the user belongs to (for authentication purposes)</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="isbn" type="xs:string">
@@ -258,6 +277,11 @@
 			<xs:documentation xml:lang="en">Number of pages in an item or a component part of an item.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:element name="passwordAut">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Password (for authentication purposes)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:element name="pickUpAgencyId" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">The library/branch, where the end user whishes to collect the item. PickUpAgency is always stated. See also: pickUpAgencySubdivision.</xs:documentation>
@@ -331,6 +355,11 @@
 	<xs:element name="userDateOfBirth" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">End user.s date of birth</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="userIdAut">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">User identifier (for authentication purposes)</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="userId" type="xs:string">
