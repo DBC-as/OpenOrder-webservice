@@ -412,6 +412,7 @@
 			<xs:enumeration value="service unavailable"/>
 			<xs:enumeration value="pickupAgency not found"/>
 			<xs:enumeration value="user not found"/>
+      <xs:enumeration value="authentication_error"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="mediumTypeType">
@@ -479,6 +480,7 @@
 			<xs:enumeration value="item can only be ordered directly from library"/>
 			<xs:enumeration value="Order does not validate"/>
 			<xs:enumeration value="Error sending order to ORS"/>
+      <xs:enumeration value="authentication_error"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="userIdTypeType">
