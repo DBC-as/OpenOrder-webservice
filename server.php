@@ -52,15 +52,19 @@ class openOrder extends webServiceServer {
   */
   public function checkOrderPolicy($param) {
     $copr = &$ret->checkOrderPolicyResponse->_value;
-    $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
-                                        $this->strip_agency($param->pickUpAgencyId->_value),
-                                        $param->serviceRequester->_value);
-    if ($policy["checkOrderPolicyError"])
-      $copr->checkOrderPolicyError->_value = $policy["checkOrderPolicyError"];
+    if (!$this->aaa->has_right("openorder", 500))
+      $copr->checkOrderPolicyError->_value = "authentication_error";
     else {
-      $copr->lookUpUrl->_value = $policy["lookUpUrl"];
-      $copr->orderPossible->_value = $policy["orderPossible"];
-      $copr->orderPossibleReason->_value = $policy["orderPossibleReason"];
+      $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
+                                          $this->strip_agency($param->pickUpAgencyId->_value),
+                                          $param->serviceRequester->_value);
+      if ($policy["checkOrderPolicyError"])
+        $copr->checkOrderPolicyError->_value = $policy["checkOrderPolicyError"];
+      else {
+        $copr->lookUpUrl->_value = $policy["lookUpUrl"];
+        $copr->orderPossible->_value = $policy["orderPossible"];
+        $copr->orderPossibleReason->_value = $policy["orderPossibleReason"];
+      }
     }
 
     //var_dump($copr); var_dump($param); die();
@@ -85,85 +89,89 @@ class openOrder extends webServiceServer {
   */
   public function placeOrder($param) {
     $por = &$ret->placeOrderResponse->_value;
-    $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
-                                        $this->strip_agency($param->pickUpAgencyId->_value),
-                                        $param->serviceRequester->_value);
-    if ($policy["checkOrderPolicyError"])
-      $por->orderNotPlaced->_value->placeOrderError->_value = $policy["checkOrderPolicyError"];
-    elseif ($policy["orderPossible"] != "TRUE") {
-      $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
-      $por->orderNotPlaced->_value->placeOrderError->_value = $policy["orderPossibleReason"];
-    } else {
-      $ubf = new DOMDocument('1.0', 'utf-8');
-      $order = $this->add_ubf_node($ubf, $ubf, "order", "", TRUE);
-      $this->add_ubf_node($ubf, $order, "author", $param->author->_value);
-      $this->add_ubf_node($ubf, $order, "authorOfComponent", $param->authorOfComponent->_value);
-      $this->add_ubf_node($ubf, $order, "bibliographicCategory", $param->bibliographicCategory->_value);
-      $this->add_ubf_node($ubf, $order, "bibliographicRecordAgencyId", $param->bibliographicRecordAgencyId->_value);
-      $this->add_ubf_node($ubf, $order, "bibliographicRecordId", $param->bibliographicRecordId->_value);
-      $this->add_ubf_node($ubf, $order, "callNumber", $param->callNumber->_value);  // ??
-      $this->add_ubf_node($ubf, $order, "copy", $param->copy->_value);
-      $this->add_ubf_node($ubf, $order, "edition", $param->edition->_value);  // ??
-      $this->add_ubf_node($ubf, $order, "exactEdition", $param->exactEdition->_value);
-      $this->add_ubf_node($ubf, $order, "isbn", $param->isbn->_value);
-      $this->add_ubf_node($ubf, $order, "issn", $param->issn->_value);
-      $this->add_ubf_node($ubf, $order, "issue", $param->issue->_value);
-      $this->add_ubf_node($ubf, $order, "itemId", $param->itemId->_value);		// ??
-      $this->add_ubf_node($ubf, $order, "language", $param->language->_value);		// ??
-      $this->add_ubf_node($ubf, $order, "localHoldingsId", $param->localHoldingsId->_value);
-      $this->add_ubf_node($ubf, $order, "mediumType", $param->mediumType->_value);		// ??
-      $this->add_ubf_node($ubf, $order, "needBeforeDate", $param->needBeforeDate->_value);
-      $this->add_ubf_node($ubf, $order, "orderId", $param->orderId->_value);		// ??
-      $this->add_ubf_node($ubf, $order, "orderSystem", $param->orderSystem->_value);
-      $this->add_ubf_node($ubf, $order, "pagination", $param->pagination->_value);
-      $this->add_ubf_node($ubf, $order, "pickUpAgencyId", $param->pickUpAgencyId->_value);		// ??
-      $this->add_ubf_node($ubf, $order, "placeOfPublication", $param->placeOfPublication->_value);		// ??
-      $this->add_ubf_node($ubf, $order, "publicationDate", $param->publicationDate->_value);
-      $this->add_ubf_node($ubf, $order, "publicationDateOfComponent", $param->publicationDateOfComponent->_value);
-      $this->add_ubf_node($ubf, $order, "publisher", $param->publisher->_value);		// ??
-      $this->add_ubf_node($ubf, $order, "seriesTitelNumber", $param->seriesTitelNumber->_value);
-      $this->add_ubf_node($ubf, $order, "title", $param->title->_value);
-      $this->add_ubf_node($ubf, $order, "titleOfComponent", $param->titleOfComponent->_value);
-      $this->add_ubf_node($ubf, $order, "userAddress", $param->userAddress->_value);
-      $this->add_ubf_node($ubf, $order, "userAgencyId", $param->userAgencyId->_value);		// ??
-      $this->add_ubf_node($ubf, $order, "userDateOfBirth", $param->userDateOfBirth->_value);
-      $this->add_ubf_node($ubf, $order, "userId", $param->userId->_value);
-      if ($param->userId->_value)
-        $this->add_ubf_node($ubf, $order, "userIdAuthenticated", $this->xs_boolean($param->userIdAuthenticated->_value) ? "yes" : "no");
-      $this->add_ubf_node($ubf, $order, "userIdType", $param->userIdType->_value);
-      $this->add_ubf_node($ubf, $order, "userMail", $param->userMail->_value);
-      $this->add_ubf_node($ubf, $order, "userName", $param->userName->_value);
-      $this->add_ubf_node($ubf, $order, "userReferenceSource", $param->userReferenceSource->_value);		// ??
-      $this->add_ubf_node($ubf, $order, "userTelephone", $param->userTelephone->_value);
-      $this->add_ubf_node($ubf, $order, "verificationReferenceSource", $param->verificationReferenceSource->_value);
-      $this->add_ubf_node($ubf, $order, "volume", $param->volume->_value);
-
-      $ubf_xml = $ubf->saveXML();
-      //echo "ubf: <pre>" . $ubf_xml . "</pre>\n";
-      if ($this->validate["ubf"] && !$this->validate_xml($ubf_xml, $this->validate["ubf"])) {
-          $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
-          $por->orderNotPlaced->_value->placeOrderError->_value = "Order does not validate";
+    if (!$this->aaa->has_right("openorder", 500))
+      $por->orderNotPlaced->_value->placeOrderError->_value = "authentication_error";
+    else {
+      $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
+                                          $this->strip_agency($param->pickUpAgencyId->_value),
+                                          $param->serviceRequester->_value);
+      if ($policy["checkOrderPolicyError"])
+        $por->orderNotPlaced->_value->placeOrderError->_value = $policy["checkOrderPolicyError"];
+      elseif ($policy["orderPossible"] != "TRUE") {
+        $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
+        $por->orderNotPlaced->_value->placeOrderError->_value = $policy["orderPossibleReason"];
       } else {
-  // send ubf-itemorder via z3950
-        $this->watch->start("xml_update");
-        $z3950 = new z3950();
-        $z3950->set_authentication($this->config->get_value("es_authentication", "setup"), $_SERVER["REMOTE_ADDR"]);
-        $z3950->set_target($this->config->get_value("es_target", "setup"));
-        $tgt_ref = $z3950->z3950_xml_itemorder($ubf_xml, $this->config->get_value("es_timeout", "setup"));
-        $this->watch->stop("xml_update");
-        if ($tgt_ref = $tgt_ref['targetReference']) {
-          $por->orderPlaced->_value->orderId->_value = $tgt_ref;
-          $por->orderPlaced->_value->orderPlacesMessage->_value = "item available at pickupAgency, order accepted";
+        $ubf = new DOMDocument('1.0', 'utf-8');
+        $order = $this->add_ubf_node($ubf, $ubf, "order", "", TRUE);
+        $this->add_ubf_node($ubf, $order, "author", $param->author->_value);
+        $this->add_ubf_node($ubf, $order, "authorOfComponent", $param->authorOfComponent->_value);
+        $this->add_ubf_node($ubf, $order, "bibliographicCategory", $param->bibliographicCategory->_value);
+        $this->add_ubf_node($ubf, $order, "bibliographicRecordAgencyId", $param->bibliographicRecordAgencyId->_value);
+        $this->add_ubf_node($ubf, $order, "bibliographicRecordId", $param->bibliographicRecordId->_value);
+        $this->add_ubf_node($ubf, $order, "callNumber", $param->callNumber->_value);  // ??
+        $this->add_ubf_node($ubf, $order, "copy", $param->copy->_value);
+        $this->add_ubf_node($ubf, $order, "edition", $param->edition->_value);  // ??
+        $this->add_ubf_node($ubf, $order, "exactEdition", $param->exactEdition->_value);
+        $this->add_ubf_node($ubf, $order, "isbn", $param->isbn->_value);
+        $this->add_ubf_node($ubf, $order, "issn", $param->issn->_value);
+        $this->add_ubf_node($ubf, $order, "issue", $param->issue->_value);
+        $this->add_ubf_node($ubf, $order, "itemId", $param->itemId->_value);		// ??
+        $this->add_ubf_node($ubf, $order, "language", $param->language->_value);		// ??
+        $this->add_ubf_node($ubf, $order, "localHoldingsId", $param->localHoldingsId->_value);
+        $this->add_ubf_node($ubf, $order, "mediumType", $param->mediumType->_value);		// ??
+        $this->add_ubf_node($ubf, $order, "needBeforeDate", $param->needBeforeDate->_value);
+        $this->add_ubf_node($ubf, $order, "orderId", $param->orderId->_value);		// ??
+        $this->add_ubf_node($ubf, $order, "orderSystem", $param->orderSystem->_value);
+        $this->add_ubf_node($ubf, $order, "pagination", $param->pagination->_value);
+        $this->add_ubf_node($ubf, $order, "pickUpAgencyId", $param->pickUpAgencyId->_value);		// ??
+        $this->add_ubf_node($ubf, $order, "placeOfPublication", $param->placeOfPublication->_value);		// ??
+        $this->add_ubf_node($ubf, $order, "publicationDate", $param->publicationDate->_value);
+        $this->add_ubf_node($ubf, $order, "publicationDateOfComponent", $param->publicationDateOfComponent->_value);
+        $this->add_ubf_node($ubf, $order, "publisher", $param->publisher->_value);		// ??
+        $this->add_ubf_node($ubf, $order, "seriesTitelNumber", $param->seriesTitelNumber->_value);
+        $this->add_ubf_node($ubf, $order, "title", $param->title->_value);
+        $this->add_ubf_node($ubf, $order, "titleOfComponent", $param->titleOfComponent->_value);
+        $this->add_ubf_node($ubf, $order, "userAddress", $param->userAddress->_value);
+        $this->add_ubf_node($ubf, $order, "userAgencyId", $param->userAgencyId->_value);		// ??
+        $this->add_ubf_node($ubf, $order, "userDateOfBirth", $param->userDateOfBirth->_value);
+        $this->add_ubf_node($ubf, $order, "userId", $param->userId->_value);
+        if ($param->userId->_value)
+          $this->add_ubf_node($ubf, $order, "userIdAuthenticated", $this->xs_boolean($param->userIdAuthenticated->_value) ? "yes" : "no");
+        $this->add_ubf_node($ubf, $order, "userIdType", $param->userIdType->_value);
+        $this->add_ubf_node($ubf, $order, "userMail", $param->userMail->_value);
+        $this->add_ubf_node($ubf, $order, "userName", $param->userName->_value);
+        $this->add_ubf_node($ubf, $order, "userReferenceSource", $param->userReferenceSource->_value);		// ??
+        $this->add_ubf_node($ubf, $order, "userTelephone", $param->userTelephone->_value);
+        $this->add_ubf_node($ubf, $order, "verificationReferenceSource", $param->verificationReferenceSource->_value);
+        $this->add_ubf_node($ubf, $order, "volume", $param->volume->_value);
+  
+        $ubf_xml = $ubf->saveXML();
+        //echo "ubf: <pre>" . $ubf_xml . "</pre>\n";
+        if ($this->validate["ubf"] && !$this->validate_xml($ubf_xml, $this->validate["ubf"])) {
+            $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
+            $por->orderNotPlaced->_value->placeOrderError->_value = "Order does not validate";
         } else {
-          verbose::log(ERROR, "openorder:: xml_itemorder status: " . $z3950->get_error_string());
-          $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
-          $por->orderNotPlaced->_value->placeOrderError->_value = "Error sending order to ORS";
+    // send ubf-itemorder via z3950
+          $this->watch->start("xml_update");
+          $z3950 = new z3950();
+          $z3950->set_authentication($this->config->get_value("es_authentication", "setup"), $_SERVER["REMOTE_ADDR"]);
+          $z3950->set_target($this->config->get_value("es_target", "setup"));
+          $tgt_ref = $z3950->z3950_xml_itemorder($ubf_xml, $this->config->get_value("es_timeout", "setup"));
+          $this->watch->stop("xml_update");
+          if ($tgt_ref = $tgt_ref['targetReference']) {
+            $por->orderPlaced->_value->orderId->_value = $tgt_ref;
+            $por->orderPlaced->_value->orderPlacesMessage->_value = "item available at pickupAgency, order accepted";
+          } else {
+            verbose::log(ERROR, "openorder:: xml_itemorder status: " . $z3950->get_error_string());
+            $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
+            $por->orderNotPlaced->_value->placeOrderError->_value = "Error sending order to ORS";
+          }
+          //var_dump($tgt_ref);
+          //var_dump($z3950->get_error());
         }
-        //var_dump($tgt_ref);
-        //var_dump($z3950->get_error());
+  
+  
       }
-
-
     }
     //var_dump($ret); var_dump($param); die();
     return $ret;
