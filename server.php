@@ -54,6 +54,8 @@ class openOrder extends webServiceServer {
     $copr = &$ret->checkOrderPolicyResponse->_value;
     if (!$this->aaa->has_right("openorder", 500))
       $copr->checkOrderPolicyError->_value = "authentication_error";
+    elseif (empty($param->serviceRequester->_value))
+      $copr->checkOrderPolicyError->_value = "serviceRequester is obligatory";
     else {
       $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
                                           $this->strip_agency($param->pickUpAgencyId->_value),
@@ -91,6 +93,8 @@ class openOrder extends webServiceServer {
     $por = &$ret->placeOrderResponse->_value;
     if (!$this->aaa->has_right("openorder", 500))
       $por->orderNotPlaced->_value->placeOrderError->_value = "authentication_error";
+    elseif (empty($param->serviceRequester->_value))
+      $por->orderNotPlaced->_value->placeOrderError->_value = "serviceRequester is obligatory";
     else {
       $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
                                           $this->strip_agency($param->pickUpAgencyId->_value),

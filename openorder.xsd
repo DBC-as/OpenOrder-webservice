@@ -480,6 +480,7 @@
 			<xs:enumeration value="item can only be ordered directly from library"/>
 			<xs:enumeration value="Order does not validate"/>
 			<xs:enumeration value="Error sending order to ORS"/>
+			<xs:enumeration value="serviceRequester is obligatory"/>
       <xs:enumeration value="authentication_error"/>
 		</xs:restriction>
 	</xs:simpleType>
