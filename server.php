@@ -160,9 +160,17 @@ class openOrder extends webServiceServer {
           $z3950 = new z3950();
           $z3950->set_authentication($this->config->get_value("es_authentication", "setup"), $_SERVER["REMOTE_ADDR"]);
           $z3950->set_target($this->config->get_value("es_target", "setup"));
-          $tgt_ref = $z3950->z3950_xml_itemorder($ubf_xml, $this->config->get_value("es_timeout", "setup"));
+          $z_result = $z3950->z3950_xml_itemorder($ubf_xml, $this->config->get_value("es_timeout", "setup"));
+// test
+//          $z_result = Array ("xmlUpdateDoc" => '<ors:orderResponse xmlns:ors="http://oss.dbc.dk/ns/openresourcesharing"><ors:orderId>1000000068</ors:orderId></ors:orderResponse>');
           $this->watch->stop("xml_update");
-          if ($tgt_ref = $tgt_ref['targetReference']) {
+          if ($resxml = $z_result["xmlUpdateDoc"]) {
+            $resdom = new DomDocument();
+            if (@ $resdom->loadXML($resxml))
+              if ($oid = $resdom->getElementsByTagName("orderId"))
+                $tgt_ref = $oid->item(0)->nodeValue;
+          }
+          if ($tgt_ref) {
             $por->orderPlaced->_value->orderId->_value = $tgt_ref;
             $por->orderPlaced->_value->orderPlacesMessage->_value = "item available at pickupAgency, order accepted";
           } else {
