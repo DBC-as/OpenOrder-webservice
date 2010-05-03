@@ -2,7 +2,7 @@
 
 [setup]
 
-version = 0.1
+version = 0.2
 
 ; validate
 ;validate[soap_request] = soap.xsd
