@@ -59,7 +59,7 @@
 				<xs:element ref="oo:language" minOccurs="0"/>
 				<xs:element ref="oo:localHoldingsId" minOccurs="0"/>
 				<xs:element ref="oo:mediumType" minOccurs="0"/>
-				<xs:element ref="oo:needBeforeDate" minOccurs="0"/>
+				<xs:element ref="oo:needBeforeDate"/>
 				<xs:element ref="oo:orderId" minOccurs="0"/>
 				<xs:element ref="oo:orderSystem"/>
 				<xs:element ref="oo:pagination" minOccurs="0"/>
