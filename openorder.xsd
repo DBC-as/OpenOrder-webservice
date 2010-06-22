@@ -265,6 +265,11 @@
 			<xs:documentation>Parameter indicating if an order is accepted/placed (true) or not (false)</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:element name="orderPossibleReason" type="oo:orderPossibleReasonType">
+		<xs:annotation>
+			<xs:documentation>Reason for whether or not an order can be placed</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:element name="orderSystem" type="oo:orderSystemType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">The system in which the order was created.</xs:documentation>
@@ -313,11 +318,6 @@
 	<xs:element name="publisher" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Publisher of the requested material.</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="orderPossibleReason" type="oo:orderPossibleReasonType">
-		<xs:annotation>
-			<xs:documentation>Reason for whether or not an order can be placed</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="resultPosition" type="xs:int">
@@ -471,6 +471,7 @@
 			<xs:enumeration value="item available at pickupAgency, order of mediumType not accepted"/>
 			<xs:enumeration value="item not available at pickupAgency, ILL of mediumType not accepted"/>
 			<xs:enumeration value="item not available at pickupAgency, item not localised for ILL"/>
+			<xs:enumeration value="item available at pickupAgency, item may be ordered through the library's catalogue"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="placeOrderErrorType">
@@ -478,10 +479,10 @@
 			<xs:enumeration value="item available at pickupAgency, order of mediumType not accepted"/>
 			<xs:enumeration value="item not available at pickupAgency, ILL of mediumType not accepted"/>
 			<xs:enumeration value="item not available at pickupAgency, item not localised for ILL"/>
+			<xs:enumeration value="item available at pickupAgency, item may be ordered directly through the pickupAgency's catalogue"/>
 			<xs:enumeration value="service unavailable"/>
 			<xs:enumeration value="pickupAgency not found"/>
 			<xs:enumeration value="user not found"/>
-			<xs:enumeration value="item can only be ordered directly from library"/>
 			<xs:enumeration value="Order does not validate"/>
 			<xs:enumeration value="Error sending order to ORS"/>
 			<xs:enumeration value="serviceRequester is obligatory"/>
