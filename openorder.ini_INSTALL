@@ -2,7 +2,13 @@
 
 [setup]
 
-version = 0.2
+version = 0.3
+
+; in_house_domain may use ?ShowInfo and use create_sample form
+;in_house_domain = .dbc.dk
+
+; set to TRUE to expose the create_sample form
+;show_samples = 1
 
 ; validate
 ;validate[soap_request] = soap.xsd
@@ -52,6 +58,14 @@ verbose = WARNING+ERROR+FATAL+STAT+TIMER+TRACE+DEBUG+Z3950+OCI
 
 ; format for automatic timer dump %s is the soap-action used
 dump_timer = openorder(%s)
+
+[textmaps]
+notemap["nourl"]["true"]["agency owns material"] = item available at pickupAgency, order accepted
+notemap["nourl"]["true"]["other agency owns material"] = item not available at pickupAgency, item localised for ILL
+notemap["nourl"]["false"]["agency owns material"] = item available at pickupAgency, order of mediumType not accepted
+notemap["nourl"]["false"]["other agency owns material"] = item not available at pickupAgency, ILL of mediumType not accepted
+notemap["nourl"]["false"]["no holdings"] = item not available at pickupAgency, item not localised for ILL
+notemap["url"]["false"]["agency owns material"] = item available at pickupAgency, item may be ordered directly through the pickupAgency\'s catalogue
 
 [aaa]
 ; aaa Authentication, Access control and Accounting

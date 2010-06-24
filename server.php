@@ -21,7 +21,10 @@
 
 
 /** \brief
- *
+ * Use ESGAROTH_WRAPPER for javascript execution - look in "safe_mode_exec_dir" (php.ini)
+ * for the prog. 
+ * The javascript may use services and their setup is found in the catalog refered
+ * from ESGAROTH_WRAPPER
  */
 
 require_once("OLS_class_lib/webServiceServer_class.php");
@@ -63,9 +66,15 @@ class openOrder extends webServiceServer {
       if ($policy["checkOrderPolicyError"])
         $copr->checkOrderPolicyError->_value = $policy["checkOrderPolicyError"];
       else {
+        $notemap = $this->config->get_value("notemap", "textmaps");
         $copr->lookUpUrl->_value = $policy["lookUpUrl"];
         $copr->orderPossible->_value = $policy["orderPossible"];
-        $copr->orderPossibleReason->_value = $policy["orderPossibleReason"];
+        if ($mapped_note = $notemap[ $policy["lookUpUrl"] ? "url" : "nourl" ]
+                                   [ strtolower($policy["orderPossible"]) ]
+                                   [ strtolower($policy["orderPossibleReason"]) ])
+          $copr->orderPossibleReason->_value = $mapped_note;
+        else
+          $copr->orderPossibleReason->_value = $policy["orderPossibleReason"];
       }
     }
 
@@ -172,7 +181,7 @@ class openOrder extends webServiceServer {
           }
           if ($tgt_ref) {
             $por->orderPlaced->_value->orderId->_value = $tgt_ref;
-            $por->orderPlaced->_value->orderPlacesMessage->_value = "item available at pickupAgency, order accepted";
+            $por->orderPlaced->_value->orderPlacedMessage->_value = "item available at pickupAgency, order accepted";
           } else {
             verbose::log(ERROR, "openorder:: xml_itemorder status: " . $z3950->get_error_string());
             $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
