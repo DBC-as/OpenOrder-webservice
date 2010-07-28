@@ -63,6 +63,7 @@ class openOrder extends webServiceServer {
       $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
                                           $this->strip_agency($param->pickUpAgencyId->_value),
                                           $param->serviceRequester->_value);
+      verbose::log(DEBUG, "openorder:: policy: " . print_r($policy, TRUE));
       if ($policy["checkOrderPolicyError"])
         $copr->checkOrderPolicyError->_value = $policy["checkOrderPolicyError"];
       else {
@@ -105,9 +106,12 @@ class openOrder extends webServiceServer {
     elseif (empty($param->serviceRequester->_value))
       $por->orderNotPlaced->_value->placeOrderError->_value = "serviceRequester is obligatory";
     else {
+      if (isset($GLOBALS["HTTP_RAW_POST_DATA"]))
+        verbose::log(DEBUG, "openorder:: xml: " . $GLOBALS["HTTP_RAW_POST_DATA"]);
       $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
                                           $this->strip_agency($param->pickUpAgencyId->_value),
                                           $param->serviceRequester->_value);
+      verbose::log(DEBUG, "openorder:: policy: " . print_r($policy, TRUE));
       if ($policy["checkOrderPolicyError"])
         $por->orderNotPlaced->_value->placeOrderError->_value = $policy["checkOrderPolicyError"];
       elseif ($policy["orderPossible"] != "TRUE") {
@@ -170,6 +174,8 @@ class openOrder extends webServiceServer {
           $z3950->set_authentication($this->config->get_value("es_authentication", "setup"), $_SERVER["REMOTE_ADDR"]);
           $z3950->set_target($this->config->get_value("es_target", "setup"));
           $z_result = $z3950->z3950_xml_itemorder($ubf_xml, $this->config->get_value("es_timeout", "setup"));
+          verbose::log(DEBUG, "openorder:: ubf: " . $ubf_xml);
+          verbose::log(DEBUG, "openorder:: result: " . $z_result["xmlUpdateDoc"]);
 // test
 //          $z_result = Array ("xmlUpdateDoc" => '<ors:orderResponse xmlns:ors="http://oss.dbc.dk/ns/openresourcesharing"><ors:orderId>1000000068</ors:orderId></ors:orderResponse>');
           $this->watch->stop("xml_update");
