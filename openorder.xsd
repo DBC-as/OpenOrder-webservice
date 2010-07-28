@@ -195,7 +195,7 @@
 			<xs:documentation xml:lang="en">Boolean stating whether only the requested edition of the item can be used, or if any available edition can be used.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="groupIdAut">
+	<xs:element name="groupIdAut" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Identifier of the group (most often a library number) the user belongs to (for authentication purposes)</xs:documentation>
 		</xs:annotation>
@@ -285,7 +285,7 @@
 			<xs:documentation xml:lang="en">Number of pages in an item or a component part of an item.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="passwordAut">
+	<xs:element name="passwordAut" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Password (for authentication purposes)</xs:documentation>
 		</xs:annotation>
@@ -360,7 +360,7 @@
 			<xs:documentation xml:lang="en">End user.s date of birth</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="userIdAut">
+	<xs:element name="userIdAut" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">User identifier (for authentication purposes)</xs:documentation>
 		</xs:annotation>
