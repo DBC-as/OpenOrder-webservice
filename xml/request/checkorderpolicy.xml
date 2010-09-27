@@ -3,8 +3,8 @@
    <soapenv:Body>
       <oo:checkOrderPolicyRequest>
          <oo:bibliographicRecordId>27670768</oo:bibliographicRecordId>
-         <oo:pickUpAgencyId>716301</oo:pickUpAgencyId>
-         <oo:serviceRequester>150013</oo:serviceRequester>
+         <oo:pickUpAgencyId>?</oo:pickUpAgencyId>
+         <oo:serviceRequester>?</oo:serviceRequester>
       </oo:checkOrderPolicyRequest>
    </soapenv:Body>
 </soapenv:Envelope>
