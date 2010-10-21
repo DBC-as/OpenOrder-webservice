@@ -22,6 +22,7 @@
          <oo:orderSystem>pallesgavebod</oo:orderSystem>
          <oo:pagination></oo:pagination>
          <oo:pickUpAgencyId>716301</oo:pickUpAgencyId>
+         <oo:pickUpAgencySubdivision></oo:pickUpAgencySubdivision>
          <oo:placeOfPublication></oo:placeOfPublication>
          <oo:publicationDate></oo:publicationDate>
          <oo:publicationDateOfComponent></oo:publicationDateOfComponent>
