@@ -188,7 +188,16 @@ class openOrder extends webServiceServer {
           }
           if ($tgt_ref) {
             $por->orderPlaced->_value->orderId->_value = $tgt_ref;
-            $por->orderPlaced->_value->orderPlacedMessage->_value = "item available at pickupAgency, order accepted";
+            if ($policy["orderPossibleReason"]) {
+              $notemap = $this->config->get_value("notemap", "textmaps");
+              if ($mapped_note = $notemap[ $policy["lookUpUrl"] ? "url" : "nourl" ]
+                                         [ "true" ]
+                                         [ strtolower($policy["orderPossibleReason"]) ])
+                $por->orderPlaced->_value->orderPlacedMessage->_value = $mapped_note;
+              else
+                $por->orderPlaced->_value->orderPlacedMessage->_value = $policy["orderPossibleReason"];
+            } else
+              $por->orderPlaced->_value->orderPlacedMessage->_value = "item available at pickupAgency, order accepted";
           } else {
             verbose::log(ERROR, "openorder:: xml_itemorder status: " . $z3950->get_error_string());
             $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
@@ -224,7 +233,7 @@ class openOrder extends webServiceServer {
   * return error-array or false
   */
   private function check_order_policy($bib_id, $agency, $requester) {
-    $fname = TMP_PATH .  md5($bib_id .  $agency .  $requester);
+    $fname = TMP_PATH .  md5($bib_id .  $agency .  $requester . microtime(TRUE));
     $f_in = $fname . '.in';
     $f_out = $fname . '.out';
     $os_obj->serviceRequester = $requester;
