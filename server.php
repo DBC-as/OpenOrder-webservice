@@ -174,7 +174,7 @@ class openOrder extends webServiceServer {
           $z3950 = new z3950();
           $z3950->set_authentication($this->config->get_value("es_authentication", "setup"), $_SERVER["REMOTE_ADDR"]);
           $z3950->set_target($this->config->get_value("es_target", "setup"));
-          $z_result = $z3950->z3950_xml_itemorder($ubf_xml, $this->config->get_value("es_timeout", "setup"));
+          $z_result = $z3950->z3950_xml_update($ubf_xml, $this->config->get_value("es_timeout", "setup"));
           verbose::log(DEBUG, "openorder:: ubf: " . $ubf_xml);
           verbose::log(DEBUG, "openorder:: result: " . $z_result["xmlUpdateDoc"]);
 // test
