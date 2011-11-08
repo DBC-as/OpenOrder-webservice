@@ -29,6 +29,7 @@
 					<xs:element ref="oo:lookUpUrl" minOccurs="0"/>
 					<xs:element ref="oo:orderPossible"/>
 					<xs:element ref="oo:orderPossibleReason" minOccurs="0"/>
+					<xs:element ref="oo:orderCondition" minOccurs="0" maxOccurs="2"/>
 				</xs:sequence>
 				<xs:element ref="oo:checkOrderPolicyError">
 					<xs:annotation>
@@ -98,9 +99,21 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:choice>
+			<xs:sequence>
 				<xs:element ref="oo:orderPlaced"/>
-				<xs:element ref="oo:orderNotPlaced"/>
+				<xs:element ref="oo:orderCondition" minOccurs="0" maxOccurs="2"/>
+			</xs:sequence>
+			<xs:element ref="oo:orderNotPlaced"/>
 			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="orderCondition">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute ref="oo:language"/>
+				</xs:extension>
+			</xs:simpleContent>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="orderPlaced">
@@ -416,6 +429,7 @@
 			<xs:documentation xml:lang="en">Volume-number in article-requests. If volume and issue are received combined, 'Issue' is preferred.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:attribute name="language" type="oo:languageType"/>
 	<xs:simpleType name="checkOrderPolicyErrorType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="service unavailable"/>
@@ -423,6 +437,12 @@
 			<xs:enumeration value="user not found"/>
 			<xs:enumeration value="authentication_error"/>
 			<xs:enumeration value="serviceRequester is obligatory"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="languageType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="dan"/>
+			<xs:enumeration value="eng"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="mediumTypeType">
