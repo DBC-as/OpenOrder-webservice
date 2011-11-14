@@ -44,12 +44,14 @@ class openOrder extends webServiceServer {
   * Request:
   * - serviceRequester
   * - bibliographicRecordId
+  * - bibliographicRecordAgencyId
   * - pickUpAgencyId
   *
   * Response:
   * - lookUpUrl
   * - orderPossible
   * - orderPossibleReason
+  * - orderCondition
   * or
   * - checkOrderPolicyError
   */
@@ -61,6 +63,7 @@ class openOrder extends webServiceServer {
       $copr->checkOrderPolicyError->_value = "serviceRequester is obligatory";
     else {
       $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
+                                          $this->strip_agency($param->bibliographicRecordAgencyId->_value),
                                           $this->strip_agency($param->pickUpAgencyId->_value),
                                           $param->serviceRequester->_value);
       verbose::log(DEBUG, "openorder:: policy: " . print_r($policy, TRUE));
@@ -76,6 +79,16 @@ class openOrder extends webServiceServer {
           $copr->orderPossibleReason->_value = $mapped_note;
         else
           $copr->orderPossibleReason->_value = $policy["orderPossibleReason"];
+        if ($policy['orderConditionDanish']) {
+          $cond_d->_attributes->language->_value = 'dan';
+          $cond_d->_value = $policy['orderConditionDanish'];
+          $copr->orderCondition[] = $cond_d;
+        }
+        if ($policy['orderConditionEnglish']) {
+          $cond_e->_attributes->language->_value = 'eng';
+          $cond_e->_value = $policy['orderConditionEnglish'];
+          $copr->orderCondition[] = $cond_e;
+        }
       }
     }
 
@@ -98,6 +111,7 @@ class openOrder extends webServiceServer {
   * - orderNotPlaced
   *   - lookUpUrl (optional)
   *   - placeOrderError
+  * - orderCondition
   */
   public function placeOrder($param) {
     $por = &$ret->placeOrderResponse->_value;
@@ -109,6 +123,7 @@ class openOrder extends webServiceServer {
       if (isset($GLOBALS["HTTP_RAW_POST_DATA"]))
         verbose::log(DEBUG, "openorder:: xml: " . $GLOBALS["HTTP_RAW_POST_DATA"]);
       $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
+                                          $this->strip_agency($param->bibliographicRecordAgencyId->_value),
                                           $this->strip_agency($param->pickUpAgencyId->_value),
                                           $param->serviceRequester->_value);
       verbose::log(DEBUG, "openorder:: policy: " . print_r($policy, TRUE));
@@ -198,6 +213,16 @@ class openOrder extends webServiceServer {
                 $por->orderPlaced->_value->orderPlacedMessage->_value = $policy["orderPossibleReason"];
             } else
               $por->orderPlaced->_value->orderPlacedMessage->_value = "item available at pickupAgency, order accepted";
+            if ($policy['orderConditionDanish']) {
+              $cond_d->_attributes->language->_value = 'dan';
+              $cond_d->_value = $policy['orderConditionDanish'];
+              $por->orderCondition[] = $cond_d;
+            }
+            if ($policy['orderConditionEnglish']) {
+              $cond_e->_attributes->language->_value = 'eng';
+              $cond_e->_value = $policy['orderConditionEnglish'];
+              $por->orderCondition[] = $cond_e;
+            }
           } else {
             verbose::log(ERROR, "openorder:: xml_itemorder status: " . $z3950->get_error_string());
             $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
@@ -232,13 +257,14 @@ class openOrder extends webServiceServer {
   *
   * return error-array or false
   */
-  private function check_order_policy($bib_id, $agency, $requester) {
-    $fname = TMP_PATH .  md5($bib_id .  $agency .  $requester . microtime(TRUE));
+  private function check_order_policy($record_id, $record_agency, $pickup_agency, $requester) {
+    $fname = TMP_PATH .  md5($record_id .  $record_agency . $agency .  $requester . microtime(TRUE));
     $f_in = $fname . '.in';
     $f_out = $fname . '.out';
     $os_obj->serviceRequester = $requester;
-    $os_obj->bibliographicRecordId = $bib_id;
-    $os_obj->pickUpAgencyId = $agency;
+    $os_obj->bibliographicRecordId = $record_id;
+    $os_obj->pickUpAgencyId = $pickup_agency;
+    $os_obj->bibliographicRecordAgencyId = $record_agency;
     if ($fp = fopen($f_in, "w")) {
       fwrite($fp, json_encode($os_obj));
       fclose($fp);
@@ -253,6 +279,8 @@ class openOrder extends webServiceServer {
           $ret["lookUpUrl"] = $es_answer->lookupUrl;
           $ret["orderPossible"] = ($es_answer->willReceive == "true" ? "TRUE" : "FALSE");
           $ret["orderPossibleReason"] = $es_answer->note;
+          $ret["orderConditionDanish"] = $es_answer->conditionDanish;
+          $ret["orderConditionEnglish"] = $es_answer->conditionEnglish;
         } else
           $ret["checkOrderPolicyError"] = "service unavailable";
       } else {

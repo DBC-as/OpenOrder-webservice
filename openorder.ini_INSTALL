@@ -2,7 +2,7 @@
 
 [setup]
 
-version = 1.0
+version = 1.1
 
 ; in_house_domain may use ?ShowInfo and use create_sample form
 ;in_house_domain = .dbc.dk
@@ -108,10 +108,59 @@ aaa_ip_rights[dbc][ressource][openorder] = 500
 ;
 
 action[checkOrderPolicy][] = bibliographicRecordId
+action[checkOrderPolicy][] = bibliographicRecordAgencyId
 action[checkOrderPolicy][] = pickUpAgencyId
 action[checkOrderPolicy][] = serviceRequester
 action[checkOrderPolicy][] = outputType
 action[checkOrderPolicy][] = callback
+
+;action[placeOrder][authentication][]=groupIdAut
+;action[placeOrder][authentication][]=passwordAut
+;action[placeOrder][authentication][]=userIdAut
+action[placeOrder][]=author
+action[placeOrder][]=authorOfComponent
+action[placeOrder][]=bibliographicCategory
+action[placeOrder][]=bibliographicRecordAgencyId
+action[placeOrder][]=bibliographicRecordId
+action[placeOrder][]=callNumber
+action[placeOrder][]=copy
+action[placeOrder][]=edition
+action[placeOrder][]=exactEdition
+action[placeOrder][]=isbn
+action[placeOrder][]=issn
+action[placeOrder][]=issue
+action[placeOrder][]=itemId
+action[placeOrder][]=language
+action[placeOrder][]=localHoldingsId
+action[placeOrder][]=mediumType
+action[placeOrder][]=needBeforeDate
+action[placeOrder][]=orderId
+action[placeOrder][]=orderSystem
+action[placeOrder][]=pagination
+action[placeOrder][]=pickUpAgencyId
+action[placeOrder][]=placeOfPublication
+action[placeOrder][]=publicationDate
+action[placeOrder][]=publicationDateOfComponent
+action[placeOrder][]=publisher
+action[placeOrder][]=seriesTitelNumber
+action[placeOrder][]=serviceRequester
+action[placeOrder][]=title
+action[placeOrder][]=titleOfComponent
+action[placeOrder][]=userAddress
+action[placeOrder][]=userAgencyId
+action[placeOrder][]=userDateOfBirth
+action[placeOrder][]=userId
+action[placeOrder][]=userIdAuthenticated
+action[placeOrder][]=userIdType
+action[placeOrder][]=userMail
+action[placeOrder][]=userName
+action[placeOrder][]=userReferenceSource
+action[placeOrder][]=userTelephone
+action[placeOrder][]=verificationReferenceSource
+action[placeOrder][]=volume
+action[placeOrder][] = outputType
+action[placeOrder][] = callback
+
 
 ;action[placeOrder][] = 
 
