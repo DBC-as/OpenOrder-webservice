@@ -73,6 +73,8 @@
 				<xs:element ref="oo:publicationDate" minOccurs="0"/>
 				<xs:element ref="oo:publicationDateOfComponent" minOccurs="0"/>
 				<xs:element ref="oo:publisher" minOccurs="0"/>
+				<xs:element ref="oo:requesterId" minOccurs="0"/>
+				<xs:element ref="oo:responderId" minOccurs="0"/>
 				<xs:element ref="oo:seriesTitelNumber" minOccurs="0"/>
 				<xs:element ref="oo:serviceRequester"/>
 				<xs:element ref="oo:title" minOccurs="0"/>
@@ -333,6 +335,16 @@
 	<xs:element name="publicationDateOfComponent" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Publication date of an item component, or article.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="requesterId" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Requester of an ILL order.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="responderId" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Chosen responder of an ILL order.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="publisher" type="xs:string">
