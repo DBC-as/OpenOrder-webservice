@@ -2,9 +2,10 @@
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:oo="http://oss.dbc.dk/ns/openorder">
    <soapenv:Body>
       <oo:checkOrderPolicyRequest>
-         <oo:bibliographicRecordId>27670768</oo:bibliographicRecordId>
-         <oo:pickUpAgencyId>?</oo:pickUpAgencyId>
-         <oo:serviceRequester>?</oo:serviceRequester>
+         <oo:bibliographicRecordId>07197195</oo:bibliographicRecordId>
+         <oo:pickUpAgencyId>716700</oo:pickUpAgencyId>
+         <oo:serviceRequester>150013</oo:serviceRequester>
+         <oo:bibliographicRecordAgencyId>870970</oo:bibliographicRecordAgencyId>
       </oo:checkOrderPolicyRequest>
    </soapenv:Body>
 </soapenv:Envelope>
