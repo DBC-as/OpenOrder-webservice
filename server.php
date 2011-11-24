@@ -155,8 +155,13 @@ class openOrder extends webServiceServer {
         $this->add_ubf_node($ubf, $order, "orderId", $param->orderId->_value);		// ??
         $this->add_ubf_node($ubf, $order, "orderSystem", $param->orderSystem->_value);
         $this->add_ubf_node($ubf, $order, "pagination", $param->pagination->_value);
-        $this->add_ubf_node($ubf, $order, "pickUpAgencyId", $this->strip_agency($param->pickUpAgencyId->_value));
-        $this->add_ubf_node($ubf, $order, "pickUpAgencySubdivision", $param->pickUpAgencySubdivision->_value);
+        if ($param->pickUpAgencyId->_value ||  $param->pickUpAgencySubdivision->_value) {
+          $this->add_ubf_node($ubf, $order, "pickUpAgencyId", $this->strip_agency($param->pickUpAgencyId->_value));
+          $this->add_ubf_node($ubf, $order, "pickUpAgencySubdivision", $param->pickUpAgencySubdivision->_value);
+        } else {
+          $this->add_ubf_node($ubf, $order, "requesterId", $param->requesterId->_value);
+          $this->add_ubf_node($ubf, $order, "responderId", $param->responderId->_value);
+        }
         $this->add_ubf_node($ubf, $order, "placeOfPublication", $param->placeOfPublication->_value);		// ??
         $this->add_ubf_node($ubf, $order, "publicationDate", $param->publicationDate->_value);
         $this->add_ubf_node($ubf, $order, "publicationDateOfComponent", $param->publicationDateOfComponent->_value);
