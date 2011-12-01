@@ -122,10 +122,17 @@ class openOrder extends webServiceServer {
     else {
       if (isset($GLOBALS["HTTP_RAW_POST_DATA"]))
         verbose::log(DEBUG, "openorder:: xml: " . $GLOBALS["HTTP_RAW_POST_DATA"]);
-      $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
-                                          $this->strip_agency($param->bibliographicRecordAgencyId->_value),
-                                          $this->strip_agency($param->pickUpAgencyId->_value),
-                                          $param->serviceRequester->_value);
+      if ($param->pickUpAgencyId->_value)
+        $policy = $this->check_order_policy(
+                           $param->bibliographicRecordId->_value,
+                           $this->strip_agency($param->bibliographicRecordAgencyId->_value),
+                           $this->strip_agency($param->pickUpAgencyId->_value),
+                           $param->serviceRequester->_value);
+      else
+        $policy = $this->check_ill_order_policy(
+                           $param->bibliographicRecordId->_value,
+                           $this->strip_agency($param->bibliographicRecordAgencyId->_value),
+                           $param->responderId->_value);
       verbose::log(DEBUG, "openorder:: policy: " . print_r($policy, TRUE));
       if ($policy["checkOrderPolicyError"])
         $por->orderNotPlaced->_value->placeOrderError->_value = $policy["checkOrderPolicyError"];
@@ -155,7 +162,7 @@ class openOrder extends webServiceServer {
         $this->add_ubf_node($ubf, $order, "orderId", $param->orderId->_value);		// ??
         $this->add_ubf_node($ubf, $order, "orderSystem", $param->orderSystem->_value);
         $this->add_ubf_node($ubf, $order, "pagination", $param->pagination->_value);
-        if ($param->pickUpAgencyId->_value ||  $param->pickUpAgencySubdivision->_value) {
+        if ($param->pickUpAgencyId->_value) {
           $this->add_ubf_node($ubf, $order, "pickUpAgencyId", $this->strip_agency($param->pickUpAgencyId->_value));
           $this->add_ubf_node($ubf, $order, "pickUpAgencySubdivision", $param->pickUpAgencySubdivision->_value);
         } else {
@@ -256,24 +263,44 @@ class openOrder extends webServiceServer {
     }
   }
 
+ /** \brief Check ill order policy for a given Agency
+  * 
+  * return error-array or false
+  */
+  private function check_ill_order_policy($record_id, $record_agency, $responder_id) {
+    $fname = TMP_PATH .  md5($record_id .  $record_agency . $responder_id . microtime(TRUE));
+    $os_obj->receiverId = $responder_id;
+    $os_obj->bibliographicRecordId = $record_id;
+    $os_obj->bibliographicRecordAgencyId = $record_agency;
+    return $this->exec_order_policy($os_obj, $fname, 'ill');
+  }
+
  /** \brief Check order policy for a given Agency
+  * 
+  * return error-array or false
+  */
+  private function check_order_policy($record_id, $record_agency, $pickup_agency, $requester) {
+    $fname = TMP_PATH .  md5($record_id .  $record_agency . $pickup_agency .  $requester . microtime(TRUE));
+    $os_obj->serviceRequester = $requester;
+    $os_obj->bibliographicRecordId = $record_id;
+    $os_obj->pickUpAgencyId = $pickup_agency;
+    $os_obj->bibliographicRecordAgencyId = $record_agency;
+    return $this->exec_order_policy($os_obj, $fname);
+  }
+
+ /** \brief wrapper for exec of esgaroth-shell
   * 
   * Use external esgaroth program to facilitate javascripts
   *
   * return error-array or false
   */
-  private function check_order_policy($record_id, $record_agency, $pickup_agency, $requester) {
-    $fname = TMP_PATH .  md5($record_id .  $record_agency . $agency .  $requester . microtime(TRUE));
+  private function exec_order_policy(&$os_obj, $fname, $par='') {
     $f_in = $fname . '.in';
     $f_out = $fname . '.out';
-    $os_obj->serviceRequester = $requester;
-    $os_obj->bibliographicRecordId = $record_id;
-    $os_obj->pickUpAgencyId = $pickup_agency;
-    $os_obj->bibliographicRecordAgencyId = $record_agency;
     if ($fp = fopen($f_in, "w")) {
       fwrite($fp, json_encode($os_obj));
       fclose($fp);
-      $es_status = exec(ESGAROTH_WRAPPER ." $f_in $f_out");
+      $es_status = exec(ESGAROTH_WRAPPER ." $f_in $f_out $par");
       unlink($f_in);
       if ($es_status)
         verbose::log(ERROR, ESGAROTH_WRAPPER . " returned error-code: " . $es_status);
