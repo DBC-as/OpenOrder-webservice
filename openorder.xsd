@@ -114,7 +114,7 @@
 			</xs:sequence>
 			<xs:sequence>
 				<xs:element ref="oo:orderNotPlaced"/>
-				<xs:element ref="oo:reason"/>
+				<xs:element ref="oo:reason" minOccurs="0"/>
 			</xs:sequence>
 			</xs:choice>
 		</xs:complexType>
