@@ -67,7 +67,7 @@
 				<xs:element ref="oo:orderId" minOccurs="0"/>
 				<xs:element ref="oo:orderSystem"/>
 				<xs:element ref="oo:pagination" minOccurs="0"/>
-                                <xs:choice>
+        <xs:choice>
 					<xs:sequence>
 						<xs:element ref="oo:pickUpAgencyId"/>
 						<xs:element ref="oo:pickUpAgencySubdivision" minOccurs="0"/> 
@@ -112,7 +112,10 @@
 				<xs:element ref="oo:orderPlaced"/>
 				<xs:element ref="oo:orderCondition" minOccurs="0" maxOccurs="2"/>
 			</xs:sequence>
-			<xs:element ref="oo:orderNotPlaced"/>
+			<xs:sequence>
+				<xs:element ref="oo:orderNotPlaced"/>
+				<xs:element ref="oo:reason"/>
+			</xs:sequence>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
@@ -149,6 +152,15 @@
 					</xs:annotation>
 				</xs:element>
 			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="reason">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute ref="oo:language"/>
+				</xs:extension>
+			</xs:simpleContent>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="authentication">
