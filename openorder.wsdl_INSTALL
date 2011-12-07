@@ -55,10 +55,10 @@
 	</wsdl:binding>
 	<wsdl:service name="openOrderService">
 		<wsdl:port name="placeOrderPortType" binding="oow:placeOrderSoapBinding">
-			<soap:address location="http://openorder.addi.dk"/>
+			<soap:address location="http://openorder.addi.dk/1.1"/>
 		</wsdl:port>
 		<wsdl:port name="checkOrderPolicyPortType" binding="oow:checkOrderPolicySoapBinding">
-			<soap:address location="http://openorder.addi.dk"/>
+			<soap:address location="http://openorder.addi.dk/1.1"/>
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>
