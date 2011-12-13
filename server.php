@@ -122,14 +122,14 @@ class openOrder extends webServiceServer {
     else {
       if (isset($GLOBALS["HTTP_RAW_POST_DATA"]))
         verbose::log(DEBUG, "openorder:: xml: " . $GLOBALS["HTTP_RAW_POST_DATA"]);
-      if ($param->verificationReferenceSource->_value == 'none')
-        $policy = $this->check_nonVerifiedIll_order_policy($param->responderId->_value);
-      elseif ($param->pickUpAgencyId->_value)
+      if ($param->pickUpAgencyId->_value)
         $policy = $this->check_order_policy(
                            $param->bibliographicRecordId->_value,
                            $this->strip_agency($param->bibliographicRecordAgencyId->_value),
                            $this->strip_agency($param->pickUpAgencyId->_value),
                            $param->serviceRequester->_value);
+      elseif ($param->verificationReferenceSource->_value == 'none')
+        $policy = $this->check_nonVerifiedIll_order_policy($param->responderId->_value);
       else
         $policy = $this->check_ill_order_policy(
                            $param->bibliographicRecordId->_value,
