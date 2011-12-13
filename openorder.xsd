@@ -50,8 +50,8 @@
 				<xs:element ref="oo:author" minOccurs="0"/>
 				<xs:element ref="oo:authorOfComponent" minOccurs="0"/>
 				<xs:element ref="oo:bibliographicCategory" minOccurs="0"/>
-				<xs:element ref="oo:bibliographicRecordAgencyId"/>
-				<xs:element ref="oo:bibliographicRecordId"/>
+				<xs:element ref="oo:bibliographicRecordAgencyId" minOccurs="0"/>
+				<xs:element ref="oo:bibliographicRecordId" minOccurs="0"/>
 				<xs:element ref="oo:callNumber" minOccurs="0"/>
 				<xs:element ref="oo:copy" minOccurs="0"/>
 				<xs:element ref="oo:edition" minOccurs="0"/>
@@ -569,6 +569,7 @@
 			<xs:enumeration value="bibliotekdk"/>
 			<xs:enumeration value="danbib"/>
 			<xs:enumeration value="libris"/>
+			<xs:enumeration value="none"/>
 			<xs:enumeration value="pallesgavebod"/>
 			<xs:enumeration value="worldcat"/>
 		</xs:restriction>

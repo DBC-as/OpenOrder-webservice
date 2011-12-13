@@ -122,7 +122,9 @@ class openOrder extends webServiceServer {
     else {
       if (isset($GLOBALS["HTTP_RAW_POST_DATA"]))
         verbose::log(DEBUG, "openorder:: xml: " . $GLOBALS["HTTP_RAW_POST_DATA"]);
-      if ($param->pickUpAgencyId->_value)
+      if ($param->verificationReferenceSource->_value == 'none')
+        $policy = $this->check_nonVerifiedIll_order_policy($param->responderId->_value);
+      elseif ($param->pickUpAgencyId->_value)
         $policy = $this->check_order_policy(
                            $param->bibliographicRecordId->_value,
                            $this->strip_agency($param->bibliographicRecordAgencyId->_value),
@@ -173,7 +175,9 @@ class openOrder extends webServiceServer {
         $this->add_ubf_node($ubf, $order, "publicationDate", $param->publicationDate->_value);
         $this->add_ubf_node($ubf, $order, "publicationDateOfComponent", $param->publicationDateOfComponent->_value);
         $this->add_ubf_node($ubf, $order, "publisher", $param->publisher->_value);		// ??
+        $this->add_ubf_node($ubf, $order, "requesterNote", $param->requesterNote->_value);		// ??
         $this->add_ubf_node($ubf, $order, "seriesTitelNumber", $param->seriesTitelNumber->_value);
+        $this->add_ubf_node($ubf, $order, "serviceRequester", $param->serviceRequester->_value);
         $this->add_ubf_node($ubf, $order, "title", $param->title->_value);
         $this->add_ubf_node($ubf, $order, "titleOfComponent", $param->titleOfComponent->_value);
         $this->add_ubf_node($ubf, $order, "userAddress", $param->userAddress->_value);
@@ -261,6 +265,16 @@ class openOrder extends webServiceServer {
       $help = $node->appendChild($help);
       return $help;
     }
+  }
+
+ /** \brief Check nonVerifiedIll order policy for a given Agency
+  * 
+  * return error-array or false
+  */
+  private function check_nonVerifiedIll_order_policy($responder_id) {
+    $fname = TMP_PATH .  md5($responder_id . microtime(TRUE));
+    $os_obj->receiverId = $responder_id;
+    return $this->exec_order_policy($os_obj, $fname, 'nonVerifiedIll');
   }
 
  /** \brief Check ill order policy for a given Agency
