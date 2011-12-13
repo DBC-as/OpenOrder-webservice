@@ -509,6 +509,7 @@
 			<xs:enumeration value="netpunkt"/>
 			<xs:enumeration value="zpunkt"/>
 			<xs:enumeration value="pallesgavebod"/>
+			<xs:enumeration value="sbserialsolutions"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="outputTypeType">
@@ -569,7 +570,6 @@
 			<xs:enumeration value="danbib"/>
 			<xs:enumeration value="libris"/>
 			<xs:enumeration value="pallesgavebod"/>
-			<xs:enumeration value="sbserialsolutions"/>
 			<xs:enumeration value="worldcat"/>
 		</xs:restriction>
 	</xs:simpleType>
