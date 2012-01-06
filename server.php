@@ -136,11 +136,17 @@ class openOrder extends webServiceServer {
                            $this->strip_agency($param->bibliographicRecordAgencyId->_value),
                            $param->responderId->_value);
       verbose::log(DEBUG, "openorder:: policy: " . print_r($policy, TRUE));
-      if ($policy["checkOrderPolicyError"])
+      if ($policy['reason']) {
+        $reason->_attributes->language->_value = 'dan';
+        $reason->_value = $policy['reason'];
+      }
+      if ($policy["checkOrderPolicyError"]) {
         $por->orderNotPlaced->_value->placeOrderError->_value = $policy["checkOrderPolicyError"];
-      elseif ($policy["orderPossible"] != "TRUE") {
+        if ($reason) $por->reason = $reason;
+      } elseif ($policy["orderPossible"] != "TRUE") {
         $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
         $por->orderNotPlaced->_value->placeOrderError->_value = $policy["orderPossibleReason"];
+        if ($reason) $por->reason = $reason;
       } else {
         $ubf = new DOMDocument('1.0', 'utf-8');
         $order = $this->add_ubf_node($ubf, $ubf, "order", "", TRUE);
