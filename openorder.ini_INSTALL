@@ -165,7 +165,7 @@ action[placeOrder][] = callback
 ;action[placeOrder][] = 
 
 [howru]
-;test[] = checkOrderPolicy&bibliographicRecordId=27670768&pickUpAgencyId=716301&serviceRequester=150013
+;test[] = checkOrderPolicy&bibliographicRecordId=27670768&bibliographicRecordAgencyId=870970&pickUpAgencyId=716301&serviceRequester=150013
 ;preg_match[] = orderPossible
-;error[] = ERROR checkOrderPolicy for 716301
+;error[] = ERROR checkOrderPolicy for 716301 and recordId 27670768
 
