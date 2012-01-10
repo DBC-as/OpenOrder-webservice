@@ -333,6 +333,7 @@ class openOrder extends webServiceServer {
           $ret["orderPossibleReason"] = $es_answer->note;
           $ret["orderConditionDanish"] = $es_answer->conditionDanish;
           $ret["orderConditionEnglish"] = $es_answer->conditionEnglish;
+          $ret["reason"] = $es_answer->reason;
         } else
           $ret["checkOrderPolicyError"] = "service unavailable";
       } else {
