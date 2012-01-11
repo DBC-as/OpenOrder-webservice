@@ -181,7 +181,7 @@ class openOrder extends webServiceServer {
         $this->add_ubf_node($ubf, $order, "publicationDate", $param->publicationDate->_value);
         $this->add_ubf_node($ubf, $order, "publicationDateOfComponent", $param->publicationDateOfComponent->_value);
         $this->add_ubf_node($ubf, $order, "publisher", $param->publisher->_value);		// ??
-        $this->add_ubf_node($ubf, $order, "requesterNote", $param->requesterNote->_value);		// ??
+        $this->add_ubf_node($ubf, $order, "requesterNote", $param->latestRequesterNote->_value);
         $this->add_ubf_node($ubf, $order, "seriesTitelNumber", $param->seriesTitelNumber->_value);
         $this->add_ubf_node($ubf, $order, "serviceRequester", $param->serviceRequester->_value);
         $this->add_ubf_node($ubf, $order, "title", $param->title->_value);
