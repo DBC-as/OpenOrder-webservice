@@ -164,26 +164,23 @@ class openOrder extends webServiceServer {
         $this->add_ubf_node($ubf, $order, "issue", $param->issue->_value);
         $this->add_ubf_node($ubf, $order, "itemId", $param->itemId->_value);		// ??
         $this->add_ubf_node($ubf, $order, "language", $param->language->_value);		// ??
+        $this->add_ubf_node($ubf, $order, "latestRequesterNote", $param->requesterNote->_value);
         $this->add_ubf_node($ubf, $order, "localHoldingsId", $param->localHoldingsId->_value);
         $this->add_ubf_node($ubf, $order, "mediumType", $param->mediumType->_value);		// ??
         $this->add_ubf_node($ubf, $order, "needBeforeDate", $param->needBeforeDate->_value);
         $this->add_ubf_node($ubf, $order, "orderId", $param->orderId->_value);		// ??
         $this->add_ubf_node($ubf, $order, "orderSystem", $param->orderSystem->_value);
         $this->add_ubf_node($ubf, $order, "pagination", $param->pagination->_value);
-        if ($param->pickUpAgencyId->_value) {
-          $this->add_ubf_node($ubf, $order, "pickUpAgencyId", $this->strip_agency($param->pickUpAgencyId->_value));
-          $this->add_ubf_node($ubf, $order, "pickUpAgencySubdivision", $param->pickUpAgencySubdivision->_value);
-        } else {
-          $this->add_ubf_node($ubf, $order, "requesterId", $param->requesterId->_value);
-          $this->add_ubf_node($ubf, $order, "responderId", $param->responderId->_value);
-        }
+        $this->add_ubf_node($ubf, $order, "pickUpAgencyId", $this->strip_agency($param->pickUpAgencyId->_value));
+        $this->add_ubf_node($ubf, $order, "pickUpAgencySubdivision", $param->pickUpAgencySubdivision->_value);
         $this->add_ubf_node($ubf, $order, "placeOfPublication", $param->placeOfPublication->_value);		// ??
         $this->add_ubf_node($ubf, $order, "publicationDate", $param->publicationDate->_value);
         $this->add_ubf_node($ubf, $order, "publicationDateOfComponent", $param->publicationDateOfComponent->_value);
         $this->add_ubf_node($ubf, $order, "publisher", $param->publisher->_value);		// ??
-        $this->add_ubf_node($ubf, $order, "requesterNote", $param->latestRequesterNote->_value);
+        $this->add_ubf_node($ubf, $order, "requesterId", $param->requesterId->_value);
+        $this->add_ubf_node($ubf, $order, "responderId", $param->responderId->_value);
         $this->add_ubf_node($ubf, $order, "seriesTitelNumber", $param->seriesTitelNumber->_value);
-        $this->add_ubf_node($ubf, $order, "serviceRequester", $param->serviceRequester->_value);
+        //$this->add_ubf_node($ubf, $order, "serviceRequester", $param->serviceRequester->_value);
         $this->add_ubf_node($ubf, $order, "title", $param->title->_value);
         $this->add_ubf_node($ubf, $order, "titleOfComponent", $param->titleOfComponent->_value);
         $this->add_ubf_node($ubf, $order, "userAddress", $param->userAddress->_value);
@@ -201,7 +198,7 @@ class openOrder extends webServiceServer {
         $this->add_ubf_node($ubf, $order, "volume", $param->volume->_value);
   
         $ubf_xml = $ubf->saveXML();
-        //echo "ubf: <pre>" . $ubf_xml . "</pre>\n";
+        //echo "ubf: <pre>" . $ubf_xml . "</pre>\n"; 
         if ($this->validate["ubf"] && !$this->validate_xml($ubf_xml, $this->validate["ubf"])) {
             $por->orderNotPlaced->_value->lookUpUrl->_value = $policy["lookUpUrl"];
             $por->orderNotPlaced->_value->placeOrderError->_value = "Order does not validate";
