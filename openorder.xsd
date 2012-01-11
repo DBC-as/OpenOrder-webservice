@@ -67,15 +67,15 @@
 				<xs:element ref="oo:orderId" minOccurs="0"/>
 				<xs:element ref="oo:orderSystem"/>
 				<xs:element ref="oo:pagination" minOccurs="0"/>
-				<xs:element ref="oo:pickUpAgencyId"/>
+				<xs:element ref="oo:pickUpAgencyId" minOccurs="0"/>
 				<xs:element ref="oo:pickUpAgencySubdivision" minOccurs="0"/> 
 				<xs:element ref="oo:placeOfPublication" minOccurs="0"/>
 				<xs:element ref="oo:publicationDate" minOccurs="0"/>
 				<xs:element ref="oo:publicationDateOfComponent" minOccurs="0"/>
 				<xs:element ref="oo:publisher" minOccurs="0"/>
-				<xs:element ref="oo:requesterId"/>
+				<xs:element ref="oo:requesterId" minOccurs="0"/>
 				<xs:element ref="oo:requesterNote" minOccurs="0"/>
-				<xs:element ref="oo:responderId"/>
+				<xs:element ref="oo:responderId minOccurs="0""/>
 				<xs:element ref="oo:seriesTitelNumber" minOccurs="0"/>
 				<xs:element ref="oo:serviceRequester"/>
 				<xs:element ref="oo:title" minOccurs="0"/>
