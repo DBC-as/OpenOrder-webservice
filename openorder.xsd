@@ -75,7 +75,7 @@
 				<xs:element ref="oo:publisher" minOccurs="0"/>
 				<xs:element ref="oo:requesterId" minOccurs="0"/>
 				<xs:element ref="oo:requesterNote" minOccurs="0"/>
-				<xs:element ref="oo:responderId minOccurs="0""/>
+				<xs:element ref="oo:responderId" minOccurs="0"/>
 				<xs:element ref="oo:seriesTitelNumber" minOccurs="0"/>
 				<xs:element ref="oo:serviceRequester"/>
 				<xs:element ref="oo:title" minOccurs="0"/>
