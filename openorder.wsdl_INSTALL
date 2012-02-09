@@ -92,7 +92,7 @@
 	<wsdl:binding name="checkOrderPolicySoapBinding" type="oow:checkOrderPolicyPortType">
 		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
 		<wsdl:operation name="checkOrderPolicy">
-			<soap:operation soapAction="placeOrder"/>
+			<soap:operation soapAction="checkOrder"/>
 			<wsdl:input name="checkOrderPolicyRequest">
 				<soap:body use="literal"/>
 			</wsdl:input>
