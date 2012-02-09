@@ -1,0 +1,22 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:open="http://oss.dbc.dk/ns/openorder">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <open:placeOrderResponse>
+         <!--You have a CHOICE of the next 2 items at this level-->
+         <open:orderPlaced>
+            <open:orderId>?</open:orderId>
+            <!--Optional:-->
+            <open:orderPlacedMessage>?</open:orderPlacedMessage>
+         </open:orderPlaced>
+         <!--0 to 2 repetitions:-->
+         <open:orderCondition open:language="?">?</open:orderCondition>
+         <open:orderNotPlaced>
+            <!--Optional:-->
+            <open:lookUpUrl>?</open:lookUpUrl>
+            <open:placeOrderError>?</open:placeOrderError>
+         </open:orderNotPlaced>
+         <!--Optional:-->
+         <open:reason open:language="?">?</open:reason>
+      </open:placeOrderResponse>
+   </soapenv:Body>
+</soapenv:Envelope>

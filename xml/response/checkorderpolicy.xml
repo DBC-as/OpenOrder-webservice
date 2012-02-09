@@ -8,6 +8,8 @@
          <open:orderPossible>?</open:orderPossible>
          <!--Optional:-->
          <open:orderPossibleReason>?</open:orderPossibleReason>
+         <!--0 to 2 repetitions:-->
+         <open:orderCondition open:language="?">?</open:orderCondition>
          <open:checkOrderPolicyError>?</open:checkOrderPolicyError>
       </open:checkOrderPolicyResponse>
    </soapenv:Body>
