@@ -84,7 +84,7 @@
 			<wsdl:input name="placeOrderRequest">
 				<soap:body use="literal"/>
 			</wsdl:input>
-			<wsdl:output name="placeResponse">
+			<wsdl:output name="placeOrderResponse">
 				<soap:body use="literal"/>
 			</wsdl:output>
 		</wsdl:operation>
