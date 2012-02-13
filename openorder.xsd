@@ -611,6 +611,8 @@
 	<xs:simpleType name="errorType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="authentication_error"/>
+			<xs:enumeration value="expectedDelivery is mandatory with specified providerAnswer"/>
+			<xs:enumeration value="providerAnswerReason is mandatory with specified providerAnswer"/>
 			<xs:enumeration value="Order does not validate"/>
 			<xs:enumeration value="service unavailable"/>
 			<xs:enumeration value="service error"/>
