@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2010 rel. 2 (http://www.altova.com) by Dansk Bibliotekscenter A/S (Dansk Bibliotekscenter A/S) -->
+<!-- edited with XMLSpy v2012 (http://www.altova.com) by DBC A/S (DBC A/S) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:oo="http://oss.dbc.dk/ns/openorder" targetNamespace="http://oss.dbc.dk/ns/openorder" elementFormDefault="qualified">
 	<xs:annotation>
 		<xs:documentation xml:lang="en">This XML Schema describes the data and structure of data of the ORS order-service.</xs:documentation>
@@ -118,13 +118,21 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="oo:authentication" minOccurs="0"/>
-				<xs:element ref="oo:expectedDelivery" minOccurs="0"/>
+				<xs:element ref="oo:expectedDelivery" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation xml:lang="en">Mandatory if providerAnswer is hold_placed or will_supply</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 				<xs:element ref="oo:latestProviderNote" minOccurs="0"/>
 				<xs:element ref="oo:orderId"/>
 				<xs:element ref="oo:providerAnswer"/>
 				<xs:element ref="oo:providerAnswerDate"/>
-				<xs:element ref="oo:providerAnswerReason"/>
-				<xs:element ref="oo:providerOrderState"/>
+				<xs:element ref="oo:providerAnswerReason" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation xml:lang="en">Mandatory if providerAnswer is unfilled or will_supply</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="oo:providerOrderState" minOccurs="0"/>
 				<xs:element ref="oo:requesterId"/>
 				<xs:element ref="oo:responderId"/>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
@@ -142,7 +150,7 @@
 	</xs:element>
 	<xs:element name="resendRequest">
 		<xs:annotation>
-			<xs:documentation>The service request for resending an order</xs:documentation>
+			<xs:documentation xml:lang="en">The service request for resending an order</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
@@ -168,13 +176,13 @@
 			<xs:sequence>
 				<xs:element ref="oo:authentication" minOccurs="0"/>
 				<xs:element ref="oo:creationDate"/>
-				<xs:element ref="oo:dateDue"/>
-				<xs:element ref="oo:itemId"/>
+				<xs:element ref="oo:dateDue" minOccurs="0"/>
+				<xs:element ref="oo:itemId" minOccurs="0"/>
 				<xs:element ref="oo:orderId"/>
 				<xs:element ref="oo:requesterId"/>
 				<xs:element ref="oo:responderId"/>
 				<xs:element ref="oo:shippedDate"/>
-				<xs:element ref="oo:shippedServiceType"/>
+				<xs:element ref="oo:shippedServiceType" minOccurs="0"/>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
 				<xs:element ref="oo:callback" minOccurs="0"/>
 			</xs:sequence>
@@ -190,17 +198,19 @@
 	</xs:element>
 	<xs:element name="updateOrderRequest">
 		<xs:annotation>
-			<xs:documentation>The service request for updating the status of an order</xs:documentation>
+			<xs:documentation xml:lang="en">The service request for updating the status of an order</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="oo:authentication" minOccurs="0"/>
 				<xs:element ref="oo:orderId"/>
 				<xs:element ref="oo:requesterId"/>
-				<xs:element ref="oo:forwardOrderId"/>
-				<xs:element ref="oo:closed"/>
-				<xs:element ref="oo:providerOrderState"/>
-				<xs:element ref="oo:requesterOrderState"/>
+				<xs:element ref="oo:forwardOrderId" minOccurs="0"/>
+				<xs:choice>
+					<xs:element ref="oo:closed"/>
+					<xs:element ref="oo:providerOrderState"/>
+					<xs:element ref="oo:requesterOrderState"/>
+				</xs:choice>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
 				<xs:element ref="oo:callback" minOccurs="0"/>
 			</xs:sequence>
@@ -243,7 +253,7 @@
 				<xs:element ref="oo:lookUpUrl" minOccurs="0"/>
 				<xs:element ref="oo:placeOrderError">
 					<xs:annotation>
-						<xs:documentation>Message returned by the service if an order can not be placed or an error occurs.</xs:documentation>
+						<xs:documentation xml:lang="en">Message returned by the service if an order can not be placed or an error occurs.</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 			</xs:sequence>
@@ -373,7 +383,7 @@
 	</xs:element>
 	<xs:element name="lookUpUrl" type="xs:string">
 		<xs:annotation>
-			<xs:documentation>URL for item in local opac (if item can only be ordered from opac)</xs:documentation>
+			<xs:documentation xml:lang="en">URL for item in local opac (if item can only be ordered from opac)</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="mediumType" type="oo:mediumTypeType">
@@ -403,17 +413,17 @@
 	</xs:element>
 	<xs:element name="orderPlacedMessage" type="oo:orderPlacedMessageType">
 		<xs:annotation>
-			<xs:documentation>Message for order placed</xs:documentation>
+			<xs:documentation xml:lang="en"> Message for order placed</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="orderPossible" type="xs:boolean">
 		<xs:annotation>
-			<xs:documentation>Parameter indicating if an order is accepted/placed (true) or not (false)</xs:documentation>
+			<xs:documentation xml:lang="en">Parameter indicating if an order is accepted/placed (true) or not (false)</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="orderPossibleReason" type="oo:orderPossibleReasonType">
 		<xs:annotation>
-			<xs:documentation>Reason for whether or not an order can be placed</xs:documentation>
+			<xs:documentation xml:lang="en">Reason for whether or not an order can be placed</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="orderSystem" type="oo:orderSystemType">
@@ -453,11 +463,11 @@
 	</xs:element>
 	<xs:element name="placeOrderError" type="oo:placeOrderErrorType">
 		<xs:annotation>
-			<xs:documentation>Message returned by the service, if an error occurs.</xs:documentation>
+			<xs:documentation xml:lang="en">Message returned by the service, if an error occurs.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="providerAnswer" type="oo:providerAnswerType"/>
-	<xs:element name="providerAnswerDate" type="xs:string"/>
+	<xs:element name="providerAnswerDate" type="xs:dateTime"/>
 	<xs:element name="providerAnswerReason" type="oo:providerAnswerReasonType"/>
 	<xs:element name="providerOrderState" type="oo:providerOrderStateType"/>
 	<xs:element name="publicationDate" type="xs:string">
@@ -503,7 +513,7 @@
 	</xs:element>
 	<xs:element name="serviceRequester" type="xs:string">
 		<xs:annotation>
-			<xs:documentation>Identifier of the service requester</xs:documentation>
+			<xs:documentation xml:lang="en">Identifier of the service requester</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="shippedDate" type="xs:dateTime"/>
@@ -555,7 +565,7 @@
 	</xs:element>
 	<xs:element name="userIdType" type="oo:userIdTypeType">
 		<xs:annotation>
-			<xs:documentation>States userId.s type.  userId+userIdType may be authenticated.</xs:documentation>
+			<xs:documentation xml:lang="en">States userId.s type.  userId+userIdType may be authenticated.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="userMail" type="xs:string">
