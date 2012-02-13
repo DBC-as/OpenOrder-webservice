@@ -570,7 +570,7 @@
 	</xs:element>
 	<xs:element name="userMail" type="xs:string">
 		<xs:annotation>
-			<xs:documentation xml:lang="en">End user.s address.</xs:documentation>
+			<xs:documentation xml:lang="en">End user.s email address.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="userName" type="xs:string">
