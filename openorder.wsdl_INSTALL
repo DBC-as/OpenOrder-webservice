@@ -151,22 +151,22 @@
 	</wsdl:binding>
 	<wsdl:service name="openOrderService">
 		<wsdl:port name="placeOrderPortType" binding="oow:placeOrderSoapBinding">
-			<soap:address location="http://openorder.addi.dk/1.3/"/>
+			<soap:address location="http://openorder.addi.dk/2.0/"/>
 		</wsdl:port>
 		<wsdl:port name="checkOrderPolicyPortType" binding="oow:checkOrderPolicySoapBinding">
-			<soap:address location="http://openorder.addi.dk/1.3/"/>
+			<soap:address location="http://openorder.addi.dk/2.0/"/>
 		</wsdl:port>
 		<wsdl:port name="answerPortType" binding="oow:answerSoapBinding">
-			<soap:address location="http://openorder.addi.dk/1.3/"/>
+			<soap:address location="http://openorder.addi.dk/2.0/"/>
 		</wsdl:port>
 		<wsdl:port name="resendPortType" binding="oow:resendSoapBinding">
-			<soap:address location="http://openorder.addi.dk/1.3/"/>
+			<soap:address location="http://openorder.addi.dk/2.0/"/>
 		</wsdl:port>
 		<wsdl:port name="shippedPortType" binding="oow:shippedSoapBinding">
-			<soap:address location="http://openorder.addi.dk/1.3/"/>
+			<soap:address location="http://openorder.addi.dk/2.0/"/>
 		</wsdl:port>		
 		<wsdl:port name="updateOrderPortType" binding="oow:updateOrderSoapBinding">
-			<soap:address location="http://openorder.addi.dk/1.3/"/>
+			<soap:address location="http://openorder.addi.dk/2.0/"/>
 		</wsdl:port>		
 	</wsdl:service>
 </wsdl:definitions>
