@@ -2,7 +2,7 @@
 
 [setup]
 
-version = 1.2
+version = 2.0
 
 ; in_house_domain may use ?ShowInfo and use create_sample form
 ;in_house_domain = .dbc.dk
@@ -19,8 +19,12 @@ version = 1.2
 
 ; soapActions and their corresponding request structure
 ; Can be found in the wsdl but is stated here for convenience
+soapAction[answer] = answerRequest
 soapAction[checkOrderPolicy] = checkOrderPolicyRequest
 soapAction[placeOrder] = placeOrderRequest
+soapAction[resend] = resendRequest
+soapAction[shipped] = shippedRequest
+soapAction[updateOrder] = updateOrderRequest
 
 ; prefixes and namespaces
 xmlns[NONE] = http://oss.dbc.dk/ns/openorder
@@ -107,6 +111,24 @@ aaa_ip_rights[dbc][ressource][openorder] = 500
 ; from url: action=thisSoapAction&some.number=nn&another.number=mm
 ;
 
+action[answer][authentication][] = groupIdAut
+action[answer][authentication][] = passwordAut
+action[answer][authentication][] = userIdAut
+action[answer][] = expectedDelivery
+action[answer][] = latestProviderNote
+action[answer][] = orderId
+action[answer][] = providerAnswer
+action[answer][] = providerAnswerDate
+action[answer][] = providerAnswerReason
+action[answer][] = providerOrderState
+action[answer][] = requesterId
+action[answer][] = responderId
+action[answer][] = outputType
+action[answer][] = callback
+
+action[checkOrderPolicy][authentication][] = groupIdAut
+action[checkOrderPolicy][authentication][] = passwordAut
+action[checkOrderPolicy][authentication][] = userIdAut
 action[checkOrderPolicy][] = bibliographicRecordId
 action[checkOrderPolicy][] = bibliographicRecordAgencyId
 action[checkOrderPolicy][] = pickUpAgencyId
@@ -114,9 +136,9 @@ action[checkOrderPolicy][] = serviceRequester
 action[checkOrderPolicy][] = outputType
 action[checkOrderPolicy][] = callback
 
-;action[placeOrder][authentication][] = groupIdAut
-;action[placeOrder][authentication][] = passwordAut
-;action[placeOrder][authentication][] = userIdAut
+action[placeOrder][authentication][] = groupIdAut
+action[placeOrder][authentication][] = passwordAut
+action[placeOrder][authentication][] = userIdAut
 action[placeOrder][] = author
 action[placeOrder][] = authorOfComponent
 action[placeOrder][] = bibliographicCategory
@@ -138,6 +160,7 @@ action[placeOrder][] = orderId
 action[placeOrder][] = orderSystem
 action[placeOrder][] = pagination
 action[placeOrder][] = pickUpAgencyId
+action[placeOrder][] = pickUpAgencySubdivision
 action[placeOrder][] = placeOfPublication
 action[placeOrder][] = publicationDate
 action[placeOrder][] = publicationDateOfComponent
@@ -161,8 +184,41 @@ action[placeOrder][] = volume
 action[placeOrder][] = outputType
 action[placeOrder][] = callback
 
+action[resend][authentication][] = groupIdAut
+action[resend][authentication][] = passwordAut
+action[resend][authentication][] = userIdAut
+action[resend][] = messageType
+action[resend][] = orderId
+action[resend][] = requesterId
+action[resend][] = outputType
+action[resend][] = callback
 
-;action[placeOrder][] = 
+action[shipped][authentication][] = groupIdAut
+action[shipped][authentication][] = passwordAut
+action[shipped][authentication][] = userIdAut
+action[shipped][] = creationDate
+action[shipped][] = dateDue
+action[shipped][] = itemId
+action[shipped][] = orderId
+action[shipped][] = requesterId
+action[shipped][] = responderId
+action[shipped][] = shippedDate
+action[shipped][] = shippedServiceType
+action[shipped][] = outputType
+action[shipped][] = callback
+
+action[updateOrder][authentication][] = groupIdAut
+action[updateOrder][authentication][] = passwordAut
+action[updateOrder][authentication][] = userIdAut
+action[updateOrder][] = orderId
+action[updateOrder][] = requesterId
+action[updateOrder][] = forwardOrderId
+action[updateOrder][] = closed
+action[updateOrder][] = providerOrderState
+action[updateOrder][] = requesterOrderState
+action[updateOrder][] = outputType
+action[updateOrder][] = callback
+
 
 [howru]
 ;test[] = checkOrderPolicy&bibliographicRecordId=27670768&bibliographicRecordAgencyId=870970&pickUpAgencyId=716301&serviceRequester=150013
