@@ -175,7 +175,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="oo:authentication" minOccurs="0"/>
-				<xs:element ref="oo:creationDate"/>
+				<xs:element ref="oo:creationDate" minOccurs="0"/>
 				<xs:element ref="oo:dateDue" minOccurs="0"/>
 				<xs:element ref="oo:itemId" minOccurs="0"/>
 				<xs:element ref="oo:orderId"/>
