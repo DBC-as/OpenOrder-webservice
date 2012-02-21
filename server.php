@@ -69,7 +69,7 @@ class openOrder extends webServiceServer {
         $ar->error->_value = 'expectedDelivery is mandatory with specified providerAnswer';
       }
       elseif (empty($param->providerAnswerReason->_value) &&
-          (empty($param->providerAnswer->_value) || $param->providerAnswer->_value == 'will_supply')) {
+          in_array($param->providerAnswer->_value, array('', 'unfilled', 'will_supply'))) {
         $ar->error->_value = 'providerAnswerReason is mandatory with specified providerAnswer';
       }
       else {
