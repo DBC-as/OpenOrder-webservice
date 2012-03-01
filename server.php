@@ -229,6 +229,7 @@ class openOrder extends webServiceServer {
       else {
         $ubf = new DOMDocument('1.0', 'utf-8');
         $order = $this->add_ubf_node($ubf, $ubf, 'order', '', TRUE);
+        $this->add_ubf_node($ubf, $order, 'articleDirect', $param->articleDirect->_value);
         $this->add_ubf_node($ubf, $order, 'author', $param->author->_value);
         $this->add_ubf_node($ubf, $order, 'authorOfComponent', $param->authorOfComponent->_value);
         $this->add_ubf_node($ubf, $order, 'bibliographicCategory', $param->bibliographicCategory->_value);
