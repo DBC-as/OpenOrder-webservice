@@ -46,6 +46,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="oo:articleDirect" minOccurs="0"/>
 				<xs:element ref="oo:authentication" minOccurs="0"/>
 				<xs:element ref="oo:author" minOccurs="0"/>
 				<xs:element ref="oo:authorOfComponent" minOccurs="0"/>
@@ -267,6 +268,11 @@
 				</xs:extension>
 			</xs:simpleContent>
 		</xs:complexType>
+	</xs:element>
+	<xs:element name="articleDirect" type="oo:articleDirectType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">If included, order is handled as an articleDirect-order of the given type</xs:documentation>
+		</xs:annotation>
 	</xs:element>
 	<xs:element name="authentication">
 		<xs:annotation>
@@ -599,6 +605,13 @@
 		</xs:annotation>
 	</xs:element>
 	<xs:attribute name="language" type="oo:languageType"/>
+	<xs:simpleType name="articleDirectType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="electronic"/>
+			<xs:enumeration value="pickup"/>
+			<xs:enumeration value="postal"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="checkOrderPolicyErrorType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="service unavailable"/>
