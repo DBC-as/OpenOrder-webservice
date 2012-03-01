@@ -136,6 +136,7 @@ action[checkOrderPolicy][] = serviceRequester
 action[checkOrderPolicy][] = outputType
 action[checkOrderPolicy][] = callback
 
+action[placeOrder][] = articleDirect
 action[placeOrder][authentication][] = groupIdAut
 action[placeOrder][authentication][] = passwordAut
 action[placeOrder][authentication][] = userIdAut

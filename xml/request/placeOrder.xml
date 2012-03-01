@@ -3,6 +3,8 @@
    <soapenv:Body>
       <open:placeOrderRequest>
          <!--Optional:-->
+         <open:articleDirect>?</open:articleDirect>
+         <!--Optional:-->
          <open:authentication>
             <open:groupIdAut>?</open:groupIdAut>
             <open:passwordAut>?</open:passwordAut>
