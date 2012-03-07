@@ -57,6 +57,8 @@
 				<xs:element ref="oo:copy" minOccurs="0"/>
 				<xs:element ref="oo:edition" minOccurs="0"/>
 				<xs:element ref="oo:exactEdition" minOccurs="0"/>
+				<xs:element ref="oo:fulltextLink" minOccurs="0"/>
+				<xs:element ref="oo:fulltextLinkType" minOccurs="0"/>
 				<xs:element ref="oo:isbn" minOccurs="0"/>
 				<xs:element ref="oo:issn" minOccurs="0"/>
 				<xs:element ref="oo:issue" minOccurs="0"/>
@@ -225,50 +227,6 @@
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="orderCondition">
-		<xs:complexType>
-			<xs:simpleContent>
-				<xs:extension base="xs:string">
-					<xs:attribute ref="oo:language"/>
-				</xs:extension>
-			</xs:simpleContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="orderPlaced">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">OrderId for and message for order placed</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="oo:orderId"/>
-				<xs:element ref="oo:orderPlacedMessage" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="orderNotPlaced">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Error message for order not placed</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="oo:lookUpUrl" minOccurs="0"/>
-				<xs:element ref="oo:placeOrderError">
-					<xs:annotation>
-						<xs:documentation xml:lang="en">Message returned by the service if an order can not be placed or an error occurs.</xs:documentation>
-					</xs:annotation>
-				</xs:element>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="reason">
-		<xs:complexType>
-			<xs:simpleContent>
-				<xs:extension base="xs:string">
-					<xs:attribute ref="oo:language"/>
-				</xs:extension>
-			</xs:simpleContent>
-		</xs:complexType>
-	</xs:element>
 	<xs:element name="articleDirect" type="oo:articleDirectType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">If included, order is handled as an articleDirect-order of the given type</xs:documentation>
@@ -321,6 +279,11 @@
 			<xs:documentation xml:lang="en">Notation assigned to an item indicating its physical location in the owner institution.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:element name="checkOrderPolicyError" type="oo:checkOrderPolicyErrorType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Message returned by the service, if an order is not possible or an error occurs.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:element name="closed" type="xs:boolean"/>
 	<xs:element name="copy" type="xs:boolean">
 		<xs:annotation>
@@ -328,17 +291,12 @@
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="creationDate" type="xs:dateTime"/>
+	<xs:element name="dateDue" type="xs:dateTime"/>
 	<xs:element name="edition" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Edition-information from the bibliographic record, in orders without locations.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="checkOrderPolicyError" type="oo:checkOrderPolicyErrorType">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Message returned by the service, if an order is not possible or an error occurs.</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="dateDue" type="xs:dateTime"/>
 	<xs:element name="error" type="oo:errorType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en"/>
@@ -351,6 +309,16 @@
 	</xs:element>
 	<xs:element name="expectedDelivery" type="xs:dateTime"/>
 	<xs:element name="forwardOrderId" type="xs:string"/>
+	<xs:element name="fulltextLink" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Link to full text</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="fulltextLinkType" type="oo:fulltextLinkTypeType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Type of link</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:element name="groupIdAut" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Identifier of the group (most often a library number) the user belongs to (for authentication purposes)</xs:documentation>
@@ -412,10 +380,45 @@
 			<xs:documentation xml:lang="en">Number of orders in the search result.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:element name="orderCondition">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute ref="oo:language"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="orderId" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">An order.s unique number. Orders from Netpunkt/bibliotek.dk are given a number by ORS, while orders from other systems (e.g. from z39.50-clients) are given numbers by those systems (in z-ill: transaction-qualifier). Orders received via NCIP are numbered by ORS with a UniqueRequestId, qualified with a UniqueAgencyId. Orders numbered by ORS have the interval: 1000000000-2000000000 . numbered orders from other systems must not use numbers in that interval. orderId (+requesterId) is the Primary key to an order.</xs:documentation>
 		</xs:annotation>
+	</xs:element>
+	<xs:element name="orderNotPlaced">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Error message for order not placed</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="oo:lookUpUrl" minOccurs="0"/>
+				<xs:element ref="oo:placeOrderError">
+					<xs:annotation>
+						<xs:documentation xml:lang="en">Message returned by the service if an order can not be placed or an error occurs.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="orderPlaced">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">OrderId for and message for order placed</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="oo:orderId"/>
+				<xs:element ref="oo:orderPlacedMessage" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
 	</xs:element>
 	<xs:element name="orderPlacedMessage" type="oo:orderPlacedMessageType">
 		<xs:annotation>
@@ -490,6 +493,15 @@
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Publisher of the requested material.</xs:documentation>
 		</xs:annotation>
+	</xs:element>
+	<xs:element name="reason">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute ref="oo:language"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
 	</xs:element>
 	<xs:element name="requesterId" type="xs:string">
 		<xs:annotation>
@@ -629,6 +641,12 @@
 			<xs:enumeration value="Order does not validate"/>
 			<xs:enumeration value="service unavailable"/>
 			<xs:enumeration value="service error"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="fulltextLinkTypeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="doi"/>
+			<xs:enumeration value="other"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="languageType">
