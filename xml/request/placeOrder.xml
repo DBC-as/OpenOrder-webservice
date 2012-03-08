@@ -29,6 +29,10 @@
          <!--Optional:-->
          <open:exactEdition>?</open:exactEdition>
          <!--Optional:-->
+         <open:fulltextLink>?</open:fulltextLink>
+         <!--Optional:-->
+         <open:fulltextLinkType>?</open:fulltextLinkType>
+         <!--Optional:-->
          <open:isbn>?</open:isbn>
          <!--Optional:-->
          <open:issn>?</open:issn>
