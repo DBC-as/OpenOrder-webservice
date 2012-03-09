@@ -57,8 +57,8 @@
 				<xs:element ref="oo:copy" minOccurs="0"/>
 				<xs:element ref="oo:edition" minOccurs="0"/>
 				<xs:element ref="oo:exactEdition" minOccurs="0"/>
-				<xs:element ref="oo:fulltextLink" minOccurs="0"/>
-				<xs:element ref="oo:fulltextLinkType" minOccurs="0"/>
+				<xs:element ref="oo:fullTextLink" minOccurs="0"/>
+				<xs:element ref="oo:fullTextLinkType" minOccurs="0"/>
 				<xs:element ref="oo:isbn" minOccurs="0"/>
 				<xs:element ref="oo:issn" minOccurs="0"/>
 				<xs:element ref="oo:issue" minOccurs="0"/>
@@ -309,12 +309,12 @@
 	</xs:element>
 	<xs:element name="expectedDelivery" type="xs:dateTime"/>
 	<xs:element name="forwardOrderId" type="xs:string"/>
-	<xs:element name="fulltextLink" type="xs:string">
+	<xs:element name="fullTextLink" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Link to full text</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="fulltextLinkType" type="oo:fulltextLinkTypeType">
+	<xs:element name="fullTextLinkType" type="oo:fullTextLinkTypeType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Type of link</xs:documentation>
 		</xs:annotation>
@@ -643,7 +643,7 @@
 			<xs:enumeration value="service error"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="fulltextLinkTypeType">
+	<xs:simpleType name="fullTextLinkTypeType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="doi"/>
 			<xs:enumeration value="other"/>
