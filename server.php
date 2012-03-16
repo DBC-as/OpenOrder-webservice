@@ -239,8 +239,8 @@ class openOrder extends webServiceServer {
         $this->add_ubf_node($ubf, $order, 'copy', $param->copy->_value);
         $this->add_ubf_node($ubf, $order, 'edition', $param->edition->_value);  // ??
         $this->add_ubf_node($ubf, $order, 'exactEdition', $param->exactEdition->_value);
-        $this->add_ubf_node($ubf, $order, 'fullTextLink', $param->fulltextLink->_value);
-        $this->add_ubf_node($ubf, $order, 'fullTextLinkType', $param->fulltextLinkType->_value);
+        $this->add_ubf_node($ubf, $order, 'fullTextLink', $param->fullTextLink->_value);
+        $this->add_ubf_node($ubf, $order, 'fullTextLinkType', $param->fullTextLinkType->_value);
         $this->add_ubf_node($ubf, $order, 'isbn', $param->isbn->_value);
         $this->add_ubf_node($ubf, $order, 'issn', $param->issn->_value);
         $this->add_ubf_node($ubf, $order, 'issue', $param->issue->_value);
