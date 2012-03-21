@@ -70,6 +70,7 @@
 				<xs:element ref="oo:orderId" minOccurs="0"/>
 				<xs:element ref="oo:orderSystem"/>
 				<xs:element ref="oo:pagination" minOccurs="0"/>
+                <xs:element ref="oo:pid" minOccurs="0"/>
 				<xs:element ref="oo:pickUpAgencyId" minOccurs="0"/>
 				<xs:element ref="oo:pickUpAgencySubdivision" minOccurs="0"/>
 				<xs:element ref="oo:placeOfPublication" minOccurs="0"/>
@@ -463,6 +464,11 @@
 	<xs:element name="pickUpAgencySubdivision" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">A subdivision of pickUpAgency used to specify department or branch etc.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="pid" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Identifier of Open Search-object</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="placeOfPublication" type="xs:string">
