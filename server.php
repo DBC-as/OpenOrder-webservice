@@ -287,7 +287,7 @@ class openOrder extends webServiceServer {
         $this->add_ubf_node($ubf, $order, 'volume', $param->volume->_value);
 
         $ubf_xml = $ubf->saveXML();
-        echo 'ubf: <pre>' . $ubf_xml . "</pre>\n"; die();
+        //echo 'ubf: <pre>' . $ubf_xml . "</pre>\n"; die();
         if ($this->validate['ubf'] && !$this->validate_xml($ubf_xml, $this->validate['ubf'])) {
           $por->orderNotPlaced->_value->lookUpUrl->_value = $policy['lookUpUrl'];
           $por->orderNotPlaced->_value->placeOrderError->_value = 'Order does not validate';
