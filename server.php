@@ -197,6 +197,12 @@ class openOrder extends webServiceServer {
     else {
       if (isset($GLOBALS['HTTP_RAW_POST_DATA']))
         verbose::log(DEBUG, 'openorder:: xml: ' . $GLOBALS['HTTP_RAW_POST_DATA']);
+      if ($param->pid->_value && 
+          empty($param->bibliographicRecordAgencyId->_value) && 
+          empty($param->bibliographicRecordId->_value)) {
+          list($bibpart, $param->bibliographicRecordId->_value) = explode(':', $param->pid->_value);
+          list($param->bibliographicRecordAgencyId->_value, $source) = explode('-', $bibpart);
+      }
       if ($param->pickUpAgencyId->_value) {
         $policy = $this->check_order_policy(
                     $param->bibliographicRecordId->_value,
@@ -253,6 +259,7 @@ class openOrder extends webServiceServer {
         $this->add_ubf_node($ubf, $order, 'orderId', $param->orderId->_value);		// ??
         $this->add_ubf_node($ubf, $order, 'orderSystem', $param->orderSystem->_value);
         $this->add_ubf_node($ubf, $order, 'pagination', $param->pagination->_value);
+        $this->add_ubf_node($ubf, $order, 'pid', $param->pid->_value);
         $this->add_ubf_node($ubf, $order, 'pickUpAgencyId', $this->strip_agency($param->pickUpAgencyId->_value));
         $this->add_ubf_node($ubf, $order, 'pickUpAgencySubdivision', $param->pickUpAgencySubdivision->_value);
         $this->add_ubf_node($ubf, $order, 'placeOfPublication', $param->placeOfPublication->_value);		// ??
@@ -280,7 +287,7 @@ class openOrder extends webServiceServer {
         $this->add_ubf_node($ubf, $order, 'volume', $param->volume->_value);
 
         $ubf_xml = $ubf->saveXML();
-        //echo 'ubf: <pre>' . $ubf_xml . "</pre>\n";
+        echo 'ubf: <pre>' . $ubf_xml . "</pre>\n"; die();
         if ($this->validate['ubf'] && !$this->validate_xml($ubf_xml, $this->validate['ubf'])) {
           $por->orderNotPlaced->_value->lookUpUrl->_value = $policy['lookUpUrl'];
           $por->orderNotPlaced->_value->placeOrderError->_value = 'Order does not validate';
