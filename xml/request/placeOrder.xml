@@ -53,6 +53,8 @@
          <!--Optional:-->
          <open:pagination>?</open:pagination>
          <!--Optional:-->
+         <open:pid>?</open:pid>
+         <!--Optional:-->
          <open:pickUpAgencyId>?</open:pickUpAgencyId>
          <!--Optional:-->
          <open:pickUpAgencySubdivision>?</open:pickUpAgencySubdivision>
