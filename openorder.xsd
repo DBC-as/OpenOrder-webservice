@@ -4,6 +4,40 @@
 	<xs:annotation>
 		<xs:documentation xml:lang="en">This XML Schema describes the data and structure of data of the ORS order-service.</xs:documentation>
 	</xs:annotation>
+	<xs:element name="checkElectronicDeliveryRequest">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Check whether articles from a journal (identified either by it's PID or bibliographic record identifier) can be delivered electronically</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="oo:authentication" minOccurs="0"/>
+				<xs:choice>
+					<xs:sequence>
+						<xs:element ref="oo:bibliographicRecordId" minOccurs="0"/>
+						<xs:element ref="oo:bibliographicRecordAgencyId" minOccurs="0"/>
+					</xs:sequence>
+					<xs:element ref="oo:pid"/>
+				</xs:choice>
+				<xs:element ref="oo:serviceRequester"/>
+				<xs:element ref="oo:outputType" minOccurs="0"/>
+				<xs:element ref="oo:callback" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="checkElectronicDeliveryResponse">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Response indicating whether articles from a journal can be delivered electronically (true/false) and explanation why</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice>
+				<xs:sequence>
+					<xs:element ref="oo:electronicDeliveryPossible"/>
+					<xs:element ref="oo:electronicDeliveryPossibleReason" minOccurs="0"/>
+				</xs:sequence>
+				<xs:element ref="oo:error"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="checkOrderPolicyRequest">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">The service request for checking if a library accepts orders/ill for a given item</xs:documentation>
@@ -32,11 +66,7 @@
 					<xs:element ref="oo:orderPossibleReason" minOccurs="0"/>
 					<xs:element ref="oo:orderCondition" minOccurs="0" maxOccurs="2"/>
 				</xs:sequence>
-				<xs:element ref="oo:checkOrderPolicyError">
-					<xs:annotation>
-						<xs:documentation xml:lang="en">Message returned by the service if an error occurs.</xs:documentation>
-					</xs:annotation>
-				</xs:element>
+				<xs:element ref="oo:checkOrderPolicyError"/>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
@@ -70,7 +100,7 @@
 				<xs:element ref="oo:orderId" minOccurs="0"/>
 				<xs:element ref="oo:orderSystem"/>
 				<xs:element ref="oo:pagination" minOccurs="0"/>
-                <xs:element ref="oo:pid" minOccurs="0"/>
+				<xs:element ref="oo:pid" minOccurs="0"/>
 				<xs:element ref="oo:pickUpAgencyId" minOccurs="0"/>
 				<xs:element ref="oo:pickUpAgencySubdivision" minOccurs="0"/>
 				<xs:element ref="oo:placeOfPublication" minOccurs="0"/>
@@ -282,7 +312,7 @@
 	</xs:element>
 	<xs:element name="checkOrderPolicyError" type="oo:checkOrderPolicyErrorType">
 		<xs:annotation>
-			<xs:documentation xml:lang="en">Message returned by the service, if an order is not possible or an error occurs.</xs:documentation>
+			<xs:documentation xml:lang="en">Message returned by the service if an error occurs..</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="closed" type="xs:boolean"/>
@@ -296,6 +326,16 @@
 	<xs:element name="edition" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Edition-information from the bibliographic record, in orders without locations.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="electronicDeliveryPossible" type="xs:boolean">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">If true, electronic delivery of requested item is possible</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="electronicDeliveryPossibleReason" type="oo:electronicDeliveryPossibleReasonType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Explanation why electronicDeliveryPossible is true or false</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="error" type="oo:errorType">
@@ -637,6 +677,12 @@
 			<xs:enumeration value="user not found"/>
 			<xs:enumeration value="authentication_error"/>
 			<xs:enumeration value="serviceRequester is obligatory"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="electronicDeliveryPossibleReasonType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="issn not found"/>
+			<xs:enumeration value="no electronic supplier found"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="errorType">
