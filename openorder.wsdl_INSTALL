@@ -5,6 +5,12 @@
 			<xs:import schemaLocation="openorder.xsd" namespace="http://oss.dbc.dk/ns/openorder"/>
 		</xs:schema>
 	</wsdl:types>
+	<wsdl:message name="checkElectronicDeliveryRequest">
+		<wsdl:part name="body" element="oo:checkElectronicDeliveryRequest"/>
+	</wsdl:message>
+	<wsdl:message name="checkElectronicDeliveryResponse">
+		<wsdl:part name="body" element="oo:checkElectronicDeliveryResponse"/>
+	</wsdl:message>
 	<wsdl:message name="checkOrderPolicyRequest">
 		<wsdl:part name="body" element="oo:checkOrderPolicyRequest"/>
 	</wsdl:message>
@@ -41,6 +47,12 @@
 	<wsdl:message name="updateOrderResponse">
 		<wsdl:part name="body" element="oo:updateOrderResponse"/>
 	</wsdl:message>
+	<wsdl:portType name="checkElectronicDeliveryPortType">
+		<wsdl:operation name="checkElectronicDelivery">
+			<wsdl:input message="oow:checkElectronicDeliveryRequest"/>
+			<wsdl:output message="oow:checkElectronicDeliveryResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
 	<wsdl:portType name="checkOrderPolicyPortType">
 		<wsdl:operation name="checkOrderPolicy">
 			<wsdl:input message="oow:checkOrderPolicyRequest"/>
@@ -77,6 +89,18 @@
 			<wsdl:output message="oow:updateOrderResponse"/>
 		</wsdl:operation>
 	</wsdl:portType>
+	<wsdl:binding name="checkElectronicDeliverySoapBinding" type="oow:checkElectronicDeliveryPortType">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="checkElectronicDelivery">
+			<soap:operation soapAction="checkElectronicDelivery"/>
+			<wsdl:input name="checkElectronicDeliveryRequest">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="checkElectronicDeliveryResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
 	<wsdl:binding name="placeOrderSoapBinding" type="oow:placeOrderPortType">
 		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
 		<wsdl:operation name="placeOrder">
@@ -150,6 +174,9 @@
 		</wsdl:operation>
 	</wsdl:binding>
 	<wsdl:service name="openOrderService">
+		<wsdl:port name="checkElectronicDeliveryPortType" binding="oow:checkElectronicDeliverySoapBinding">
+			<soap:address location="http://openorder.addi.dk/2.0/"/>
+		</wsdl:port>
 		<wsdl:port name="placeOrderPortType" binding="oow:placeOrderSoapBinding">
 			<soap:address location="http://openorder.addi.dk/2.0/"/>
 		</wsdl:port>
