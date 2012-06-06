@@ -32,11 +32,16 @@ require_once('OLS_class_lib/z3950_class.php');
 
 
 class openOrder extends webServiceServer {
+  protected $cache;
 
   public function __construct() {
     webServiceServer::__construct('openorder.ini');
     define('ESGAROTH_WRAPPER', $this->config->get_value('esgaroth_wrapper', 'setup'));
     define('TMP_PATH', $this->config->get_value('tmp_path', 'setup'));
+    if ($host = $this->config->get_value('cache_host', 'setup')
+     && $port = $this->config->get_value('cache_port', 'setup')
+     && $expire = $this->config->get_value('cache_expire', 'setup'))
+      $this->cache = new cache($host, $port, $expire);
 
     define(DEBUG_ON, $this->debug);
   }
@@ -106,6 +111,91 @@ class openOrder extends webServiceServer {
 
     return $ret;
   }
+
+  /** \brief Check whether articles from a journal (identified either by it's PID or bibliographic record identifier) can be delivered electronically
+   *
+   * Request:
+   * - serviceRequester
+   * - bibliographicRecordId
+   * - bibliographicRecordAgencyId
+   * 2 above or
+   * - pid
+   *
+   * Response:
+   * - electronicDeliveryPossible
+   * - electronicDeliveryPossibleReason
+   * or
+   * - error
+   */
+  public function checkElectronicDelivery($param) {
+    $cedr = &$ret->checkElectronicDeliveryResponse->_value;
+    if (!$this->aaa->has_right('netpunkt.dk', 500)) {
+      $cedr->error->_value = 'authentication_error';
+    }
+    else {
+      if ($param->pid->_value
+       && empty($param->bibliographicRecordAgencyId->_value)
+       && empty($param->bibliographicRecordId->_value)) {
+        list($bibpart, $param->bibliographicRecordId->_value) = explode(':', $param->pid->_value);
+        list($param->bibliographicRecordAgencyId->_value, $source) = explode('-', $bibpart);
+      }
+      $agency = $this->strip_agency($param->bibliographicRecordAgencyId->_value);
+      if ($this->cache) {
+        $cache_key = 'OO_ced_' . $this->version . $param->serviceRequester->_value . 
+                                                  $param->bibliographicRecordId->_value . 
+                                                  $agency;
+        if ($ret = $this->cache->get($cache_key)) {
+          verbose::log(STAT, 'Cache hit');
+          return $ret;
+        }
+      }
+  // no cache, do the job
+      if ($agency <> '820010') {
+        $cedr->electronicDeliveryPossible->_value = '0';
+        $cedr->electronicDeliveryPossibleReason->_value = 'no electronic supplier found';
+      }
+      else {
+        require_once('OLS_class_lib/oci_class.php');
+        $oci = new Oci($this->config->get_value('copydan_credentials','setup'));
+        $oci->set_charset('UTF8');
+        try {
+          $oci->connect();
+        }
+        catch (ociException $e) {
+          verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI connect error: ' . $oci->get_error_string());
+          $cedr->error->_value = 'service_unavailable';
+        }
+        try {
+          $oci->bind('bind_issn', $param->bibliographicRecordId->_value);
+          $oci->set_query('SELECT *
+                             FROM copydan
+                            WHERE issn = :bind_issn');
+          if ($oci->fetch_into_assoc()) {
+            $cedr->electronicDeliveryPossible->_value = '1';
+          }
+          else {
+            $cedr->electronicDeliveryPossible->_value = '0';
+            $cedr->electronicDeliveryPossibleReason->_value = 'issn not found';
+          }
+        }
+        catch (ociException $e) {
+          verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI connect error: ' . $oci->get_error_string());
+          $cedr->error->_value = 'service_unavailable';
+        }
+
+      }
+    }
+
+    if (DEBUG_ON) {
+      var_dump($cedr);
+      var_dump($param);
+    }
+
+    if ($cache_key && empty($cedr->error)) $this->cache->set($cache_key, $ret);
+
+    return $ret;
+  }
+
 
   /** \brief Check order policy for a given Agency
    *
@@ -197,11 +287,11 @@ class openOrder extends webServiceServer {
     else {
       if (isset($GLOBALS['HTTP_RAW_POST_DATA']))
         verbose::log(DEBUG, 'openorder:: xml: ' . $GLOBALS['HTTP_RAW_POST_DATA']);
-      if ($param->pid->_value && 
-          empty($param->bibliographicRecordAgencyId->_value) && 
-          empty($param->bibliographicRecordId->_value)) {
-          list($bibpart, $param->bibliographicRecordId->_value) = explode(':', $param->pid->_value);
-          list($param->bibliographicRecordAgencyId->_value, $source) = explode('-', $bibpart);
+      if ($param->pid->_value
+       && empty($param->bibliographicRecordAgencyId->_value)
+       && empty($param->bibliographicRecordId->_value)) {
+        list($bibpart, $param->bibliographicRecordId->_value) = explode(':', $param->pid->_value);
+        list($param->bibliographicRecordAgencyId->_value, $source) = explode('-', $bibpart);
       }
       if ($param->pickUpAgencyId->_value) {
         $policy = $this->check_order_policy(
