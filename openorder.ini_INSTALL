@@ -20,6 +20,7 @@ version = 2.0
 ; soapActions and their corresponding request structure
 ; Can be found in the wsdl but is stated here for convenience
 soapAction[answer] = answerRequest
+soapAction[checkElectronicDelivery] = checkElectronicDeliveryRequest
 soapAction[checkOrderPolicy] = checkOrderPolicyRequest
 soapAction[placeOrder] = placeOrderRequest
 soapAction[resend] = resendRequest
@@ -46,7 +47,8 @@ xmldir = ./xml
 ; logfile for verbose output
 logfile = /tmp/openorder.log
 
-order_credentials = ora_user/ora_passwd@some.server.dk
+; login for copydan table
+copydan_credentials = ora_user/ora_passwd@some.server.dk
 
 ; set verboselevel
 ;   WARNING - simple warnings
@@ -91,7 +93,7 @@ aaa_credentials = ora_user/ora_passwd@some.server.dk
 ; aaa_ip_rights[group-identifier][ressource][<named ressource 2>] = right to <named ressource 2>
 ;
 aaa_ip_rights[dbc][ip_list] = 172.16.0.0-172.31.255.255;193.111.162.0-193.111.162.255
-aaa_ip_rights[dbc][ressource][openorder] = 500
+aaa_ip_rights[dbc][ressource]['netpunkt.dk'] = 500
 
 [rest]
 ; REST parameters for SOAPAction
@@ -125,6 +127,16 @@ action[answer][] = requesterId
 action[answer][] = responderId
 action[answer][] = outputType
 action[answer][] = callback
+
+action[checkElectronicDelivery][authentication][] = groupIdAut
+action[checkElectronicDelivery][authentication][] = passwordAut
+action[checkElectronicDelivery][authentication][] = userIdAut
+action[checkElectronicDelivery][] = bibliographicRecordId
+action[checkElectronicDelivery][] = bibliographicRecordAgencyId
+action[checkElectronicDelivery][] = pid
+action[checkElectronicDelivery][] = serviceRequester
+action[checkElectronicDelivery][] = outputType
+action[checkElectronicDelivery][] = callback
 
 action[checkOrderPolicy][authentication][] = groupIdAut
 action[checkOrderPolicy][authentication][] = passwordAut
