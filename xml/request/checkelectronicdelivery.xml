@@ -8,10 +8,7 @@
             <open:passwordAut>?</open:passwordAut>
             <open:userIdAut>?</open:userIdAut>
          </open:authentication>
-         <!--You have a CHOICE of the next 2 items at this level-->
-         <open:bibliographicRecordId>?</open:bibliographicRecordId>
-         <open:bibliographicRecordAgencyId>?</open:bibliographicRecordAgencyId>
-         <open:pid>?</open:pid>
+         <open:issn>?</open:issn>
          <!--Optional:-->
          <open:serviceRequester>?</open:serviceRequester>
          <!--Optional:-->
