@@ -11,13 +11,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="oo:authentication" minOccurs="0"/>
-				<xs:choice>
-					<xs:sequence>
-						<xs:element ref="oo:bibliographicRecordId"/>
-						<xs:element ref="oo:bibliographicRecordAgencyId"/>
-					</xs:sequence>
-					<xs:element ref="oo:pid"/>
-				</xs:choice>
+				<xs:element ref="oo:issn"/>
 				<xs:element ref="oo:serviceRequester" minOccurs="0"/>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
 				<xs:element ref="oo:callback" minOccurs="0"/>

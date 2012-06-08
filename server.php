@@ -112,14 +112,11 @@ class openOrder extends webServiceServer {
     return $ret;
   }
 
-  /** \brief Check whether articles from a journal (identified either by it's PID or bibliographic record identifier) can be delivered electronically
+  /** \brief Check whether articles from a journal (identified by it's ISSN) can be delivered electronically
    *
    * Request:
+   * - issn
    * - serviceRequester
-   * - bibliographicRecordId
-   * - bibliographicRecordAgencyId
-   * 2 above or
-   * - pid
    *
    * Response:
    * - electronicDeliveryPossible
@@ -133,16 +130,10 @@ class openOrder extends webServiceServer {
       $cedr->error->_value = 'authentication_error';
     }
     else {
-      if ($param->pid->_value
-       && empty($param->bibliographicRecordAgencyId->_value)
-       && empty($param->bibliographicRecordId->_value)) {
-        list($bibpart, $param->bibliographicRecordId->_value) = explode(':', $param->pid->_value);
-        list($param->bibliographicRecordAgencyId->_value, $source) = explode('-', $bibpart);
-      }
-      $agency = $this->strip_agency($param->bibliographicRecordAgencyId->_value);
+      $agency = '820010';  // sofar only 820010 can deliver electronically
       if ($this->cache) {
         $cache_key = 'OO_ced_' . $this->version . $param->serviceRequester->_value . 
-                                                  $param->bibliographicRecordId->_value . 
+                                                  $param->issn->_value . 
                                                   $agency;
         if ($ret = $this->cache->get($cache_key)) {
           verbose::log(STAT, 'Cache hit');
