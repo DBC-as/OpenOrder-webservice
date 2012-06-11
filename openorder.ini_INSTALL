@@ -1,8 +1,17 @@
 ; inifile for OpenOrder
 
 [setup]
+; To close a service, set service_http_error
+; service status - values:
+;service_http_error = HTTP/1.0 404 Not Found
+;service_http_error = HTTP/1.1 410 Gone
+;service_http_error = HTTP/1.0 503 Service Unavailable
+
 
 version = 2.0
+
+; set only_https to accept https call only
+;only_https = 1
 
 ; in_house_domain may use ?ShowInfo and use create_sample form
 ;in_house_domain = .dbc.dk
