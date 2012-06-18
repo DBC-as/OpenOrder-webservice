@@ -186,6 +186,7 @@
 				<xs:element ref="oo:messageType"/>
 				<xs:element ref="oo:orderId"/>
 				<xs:element ref="oo:requesterId"/>
+				<xs:element ref="oo:responderId"/>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
 				<xs:element ref="oo:callback" minOccurs="0"/>
 			</xs:sequence>
@@ -233,6 +234,7 @@
 				<xs:element ref="oo:authentication" minOccurs="0"/>
 				<xs:element ref="oo:orderId"/>
 				<xs:element ref="oo:requesterId"/>
+				<xs:element ref="oo:responderId"/>
 				<xs:element ref="oo:forwardOrderId" minOccurs="0"/>
 				<xs:choice>
 					<xs:element ref="oo:closed"/>
