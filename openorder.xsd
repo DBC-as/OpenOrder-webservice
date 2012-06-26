@@ -42,6 +42,7 @@
 				<xs:element ref="oo:bibliographicRecordId"/>
 				<xs:element ref="oo:bibliographicRecordAgencyId"/>
 				<xs:element ref="oo:pickUpAgencyId"/>
+ 				<xs:element ref="oo:pid" minOccurs="0"/>
 				<xs:element ref="oo:serviceRequester"/>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
 				<xs:element ref="oo:callback" minOccurs="0"/>
