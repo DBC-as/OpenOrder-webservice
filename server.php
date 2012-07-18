@@ -31,6 +31,17 @@ require_once('OLS_class_lib/webServiceServer_class.php');
 require_once('OLS_class_lib/z3950_class.php');
 
 
+/** \brief
+ * entry points: 
+ *   answer() - answer an order
+ *   checkElectronicDelivery() - Check whether articles from a journal (identified either by 
+ *         it's PID or bibliographic record identifier) can be delivered electronically
+ *   checkOrderPolicy() - check if a library accepts orders/ill for a given item
+ *   placeOrder() - place an order
+ *   resend() - resend an order
+ *   shipped() - mark an order as shipped
+ *   updateOrder() - update the status of an order
+ */
 class openOrder extends webServiceServer {
   protected $cache;
 
@@ -157,7 +168,7 @@ class openOrder extends webServiceServer {
           $cedr->error->_value = 'service_unavailable';
         }
         try {
-          $oci->bind('bind_issn', $param->bibliographicRecordId->_value);
+          $oci->bind('bind_issn', $param->issn->_value);
           $oci->set_query('SELECT *
                              FROM copydan
                             WHERE issn = :bind_issn');
