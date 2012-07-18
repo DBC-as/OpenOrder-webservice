@@ -10,6 +10,7 @@
          </open:authentication>
          <open:bibliographicRecordId>?</open:bibliographicRecordId>
          <open:bibliographicRecordAgencyId>?</open:bibliographicRecordAgencyId>
+         <open:pid>?</open:pid>
          <open:pickUpAgencyId>?</open:pickUpAgencyId>
          <open:serviceRequester>?</open:serviceRequester>
          <!--Optional:-->
