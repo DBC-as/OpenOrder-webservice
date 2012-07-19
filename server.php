@@ -202,10 +202,11 @@ class openOrder extends webServiceServer {
   /** \brief Check order policy for a given Agency
    *
    * Request:
-   * - serviceRequester
    * - bibliographicRecordId
    * - bibliographicRecordAgencyId
    * - pickUpAgencyId
+   * - pid
+   * - serviceRequester
    *
    * Response:
    * - lookUpUrl
@@ -226,6 +227,7 @@ class openOrder extends webServiceServer {
     else {
       $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
                                           $this->strip_agency($param->bibliographicRecordAgencyId->_value),
+                                          $param->pid->_value,
                                           $this->strip_agency($param->pickUpAgencyId->_value),
                                           $param->serviceRequester->_value);
       verbose::log(DEBUG, 'openorder:: policy: ' . print_r($policy, TRUE));
@@ -299,6 +301,7 @@ class openOrder extends webServiceServer {
         $policy = $this->check_order_policy(
                     $param->bibliographicRecordId->_value,
                     $this->strip_agency($param->bibliographicRecordAgencyId->_value),
+                    $param->pid->_value,
                     $this->strip_agency($param->pickUpAgencyId->_value),
                     $param->serviceRequester->_value);
       }
@@ -615,12 +618,13 @@ class openOrder extends webServiceServer {
    *
    * return error-array or false
    */
-  private function check_order_policy($record_id, $record_agency, $pickup_agency, $requester) {
+  private function check_order_policy($record_id, $record_agency, $pid, $pickup_agency, $requester) {
     $fname = TMP_PATH .  md5($record_id .  $record_agency . $pickup_agency .  $requester . microtime(TRUE));
     $os_obj->serviceRequester = $requester;
     $os_obj->bibliographicRecordId = $record_id;
     $os_obj->pickUpAgencyId = $pickup_agency;
     $os_obj->bibliographicRecordAgencyId = $record_agency;
+    $os_obj->pid = $pid;
     return $this->exec_order_policy($os_obj, $fname);
   }
 
