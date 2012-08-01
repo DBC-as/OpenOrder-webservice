@@ -619,7 +619,7 @@ class openOrder extends webServiceServer {
    * return error-array or false
    */
   private function check_order_policy($record_id, $record_agency, $pid, $pickup_agency, $requester) {
-    $fname = TMP_PATH .  md5($record_id .  $record_agency . $pid, $pickup_agency .  $requester . microtime(TRUE));
+    $fname = TMP_PATH .  md5($record_id .  $record_agency . $pid . $pickup_agency .  $requester . microtime(TRUE));
     $os_obj->serviceRequester = $requester;
     $os_obj->bibliographicRecordId = $record_id;
     $os_obj->pickUpAgencyId = $pickup_agency;
