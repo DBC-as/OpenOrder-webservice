@@ -39,6 +39,14 @@ soapAction[updateOrder] = updateOrderRequest
 ; prefixes and namespaces
 xmlns[NONE] = http://oss.dbc.dk/ns/openorder
 
+; openagency
+; url to openagency
+openagency_url = http://openagency.someserver.dk/?action=pickupAgencyList&agencyId=%s
+; how long do we accept to wait for answer
+openagency_timeout = 20
+; list of auth-groups which can act on behalf of other libraries
+;openagency_override = 010100
+
 ;Extend Service target
 es_target = some_es_target
 es_authentication = user/group/password
@@ -75,12 +83,13 @@ verbose = WARNING+ERROR+FATAL+STAT+TIMER+TRACE+DEBUG+Z3950+OCI
 dump_timer = openorder(%s)
 
 [textmaps]
-notemap["nourl"]["true"]["agency owns material"] = item available at pickupAgency, order accepted
-notemap["nourl"]["true"]["other agency owns material"] = item not available at pickupAgency, item localised for ILL
-notemap["nourl"]["false"]["agency owns material"] = item available at pickupAgency, order of mediumType not accepted
-notemap["nourl"]["false"]["other agency owns material"] = item not available at pickupAgency, ILL of mediumType not accepted
-notemap["nourl"]["false"]["no holdings"] = item not available at pickupAgency, item not localised for ILL
-notemap["url"]["false"]["agency owns material"] = item available at pickupAgency, item may be ordered directly through the pickupAgency\'s catalogue
+notemap["nourl"]["true"]["agency owns material"] = owned_accepted
+notemap["url"]["true"]["agency owns material"] = owned_accepted
+notemap["nourl"]["true"]["other agency owns material"] = not_owned_ILL_loc
+notemap["nourl"]["false"]["agency owns material"] = owned_wrong_mediumType
+notemap["nourl"]["false"]["other agency owns material"] = not_owned_wrong_ILL_mediumType
+notemap["nourl"]["false"]["no holdings"] = not_owned_no_ILL_loc
+notemap["url"]["false"]["agency owns material"] = owned_own_catalogue
 
 [aaa]
 ; aaa Authentication, Access control and Accounting
