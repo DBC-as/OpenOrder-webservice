@@ -669,11 +669,11 @@
 	</xs:simpleType>
 	<xs:simpleType name="checkOrderPolicyErrorType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="service unavailable"/>
-			<xs:enumeration value="pickupAgency not found"/>
-			<xs:enumeration value="user not found"/>
+			<xs:enumeration value="service_unavailable"/>
+			<xs:enumeration value="unknown_pickupAgency"/>
+			<xs:enumeration value="unknown_user"/>
 			<xs:enumeration value="authentication_error"/>
-			<xs:enumeration value="serviceRequester is obligatory"/>
+			<xs:enumeration value="no_serviceRequester"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="electronicDeliveryPossibleReasonType">
@@ -686,10 +686,12 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="authentication_error"/>
 			<xs:enumeration value="expectedDelivery is mandatory with specified providerAnswer"/>
+			<xs:enumeration value="operation not authorized for specified requesterId"/>
+			<xs:enumeration value="operation not authorized for specified responderId"/>
+			<xs:enumeration value="invalid_order"/>
 			<xs:enumeration value="providerAnswerReason is mandatory with specified providerAnswer"/>
-			<xs:enumeration value="Order does not validate"/>
-			<xs:enumeration value="service unavailable"/>
-			<xs:enumeration value="service error"/>
+			<xs:enumeration value="service_unavailable"/>
+			<xs:enumeration value="service_error"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="fullTextLinkTypeType">
@@ -756,32 +758,34 @@
 	</xs:simpleType>
 	<xs:simpleType name="orderPlacedMessageType">
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="owned_accepted"/>
 			<xs:enumeration value="item available at pickupAgency, order accepted"/>
+			<xs:enumeration value="not_owned_ILL_loc"/>
 			<xs:enumeration value="item not available at pickupAgency, item localised for ILL"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="orderPossibleReasonType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="item available at pickupAgency, order accepted"/>
-			<xs:enumeration value="item not available at pickupAgency, item localised for ILL"/>
-			<xs:enumeration value="item available at pickupAgency, order of mediumType not accepted"/>
-			<xs:enumeration value="item not available at pickupAgency, ILL of mediumType not accepted"/>
-			<xs:enumeration value="item not available at pickupAgency, item not localised for ILL"/>
-			<xs:enumeration value="item available at pickupAgency, item may be ordered through the library's catalogue"/>
+			<xs:enumeration value="owned_accepted"/>
+			<xs:enumeration value="not_owned_ILL_loc"/>
+			<xs:enumeration value="owned_wrong_mediumType"/>
+			<xs:enumeration value="not_owned_wrong_ILL_mediumType"/>
+			<xs:enumeration value="not_owned_no_ILL_loc"/>
+			<xs:enumeration value="owned_own_catalogue"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="placeOrderErrorType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="item available at pickupAgency, order of mediumType not accepted"/>
-			<xs:enumeration value="item not available at pickupAgency, ILL of mediumType not accepted"/>
-			<xs:enumeration value="item not available at pickupAgency, item not localised for ILL"/>
-			<xs:enumeration value="item available at pickupAgency, item may be ordered directly through the pickupAgency's catalogue"/>
-			<xs:enumeration value="service unavailable"/>
-			<xs:enumeration value="pickupAgency not found"/>
-			<xs:enumeration value="user not found"/>
-			<xs:enumeration value="Order does not validate"/>
-			<xs:enumeration value="Error sending order to ORS"/>
-			<xs:enumeration value="serviceRequester is obligatory"/>
+			<xs:enumeration value="owned_wrong_mediumType"/>
+			<xs:enumeration value="not_owned_wrong_ILL_mediumType"/>
+			<xs:enumeration value="not_owned_no_ILL_loc"/>
+			<xs:enumeration value="owned_own_catalogue"/>
+			<xs:enumeration value="service_unavailable"/>
+			<xs:enumeration value="unknown_pickupAgency"/>
+			<xs:enumeration value="unknown_user"/>
+			<xs:enumeration value="invalid_order"/>
+			<xs:enumeration value="ORS_error"/>
+			<xs:enumeration value="no_serviceRequester"/>
 			<xs:enumeration value="authentication_error"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -857,7 +861,7 @@
 	</xs:simpleType>
 	<xs:simpleType name="updateStatusType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="update sent"/>
+			<xs:enumeration value="update_sent"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="userIdTypeType">

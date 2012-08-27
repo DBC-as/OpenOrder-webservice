@@ -27,6 +27,23 @@
  * from ESGAROTH_WRAPPER
  */
 
+/*
+ - owned_accepted:                 item available at pickupAgency, order accepted
+ - not_owned_ILL_loc:              item not available at pickupAgency, item localised for ILL
+ - owned_wrong_mediumType:         item available at pickupAgency, order of mediumType not accepted
+ - not_owned_wrong_ILL_mediumType: item not available at pickupAgency, ILL of mediumType not accepted
+ - not_owned_no_ILL_loc:           item not available at pickupAgency, item not localised for ILL
+ - owned_own_catalogue:            item available at pickupAgency, item may be ordered through the library's catalogue
+
+ - service_unavailable:            service unavailable
+            unknown_pickupAgency:           pickupAgency not found
+            unknown_user:                   user not found
+ - invalid_order:                  Order does not validate
+ - ORS_error:                      Error sending order to ORS
+ - no_serviceRequester:            serviceRequester is obligatory
+ - authentication_error:           authentication error
+
+*/
 require_once('OLS_class_lib/webServiceServer_class.php');
 require_once('OLS_class_lib/z3950_class.php');
 
@@ -88,6 +105,9 @@ class openOrder extends webServiceServer {
           in_array($param->providerAnswer->_value, array('', 'unfilled', 'will_supply'))) {
         $ar->error->_value = 'providerAnswerReason is mandatory with specified providerAnswer';
       }
+      elseif (!$this->check_library_group($param->authentication->_value->groupIdAut->_value, $param->responderId->_value)) {
+        $ar->error->_value = 'operation not authorized for specified responderId';
+      }
       else {
         $ubf = new DOMDocument('1.0', 'utf-8');
         $answer = $this->add_ubf_node($ubf, $ubf, 'answer', '', TRUE);
@@ -103,14 +123,14 @@ class openOrder extends webServiceServer {
   
         $ubf_xml = $ubf->saveXML();
         if ($this->validate['ubf'] && !$this->validate_xml($ubf_xml, $this->validate['ubf'])) {
-          $ar->error->_value = 'Order does not validate';
+          $ar->error->_value = 'invalid_order';
           verbose::log(FATAL, 'openorder:: answer: ' . $ar->error->_value);
         }
         else {
           if ($this->es_xmlupdate($ubf_xml)) {
-            $ar->updateStatus->_value = 'update sent';
+            $ar->updateStatus->_value = 'update_sent';
           } else {
-            $ar->error->_value = 'service error';
+            $ar->error->_value = 'service_error';
           }
         }
       }
@@ -209,6 +229,7 @@ class openOrder extends webServiceServer {
    * - serviceRequester
    *
    * Response:
+   * - agencyCatalogueUrl
    * - lookUpUrl
    * - orderPossible
    * - orderPossibleReason
@@ -222,7 +243,7 @@ class openOrder extends webServiceServer {
       $copr->checkOrderPolicyError->_value = 'authentication_error';
     }
     elseif (empty($param->serviceRequester->_value)) {
-      $copr->checkOrderPolicyError->_value = 'serviceRequester is obligatory';
+      $copr->checkOrderPolicyError->_value = 'no_serviceRequester';
     }
     else {
       $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
@@ -235,7 +256,10 @@ class openOrder extends webServiceServer {
         $copr->checkOrderPolicyError->_value = $policy['checkOrderPolicyError'];
       else {
         $notemap = $this->config->get_value('notemap', 'textmaps');
-        $copr->lookUpUrl->_value = $policy['lookUpUrl'];
+        if ($policy['agencyCatalogueUrl'])
+          $copr->agencyCatalogueUrl->_value = $policy['agencyCatalogueUrl'];
+        if ($policy['lookUpUrl'])
+          $copr->lookUpUrl->_value = $policy['lookUpUrl'];
         $copr->orderPossible->_value = $policy['orderPossible'];
         if ($mapped_note = $notemap[ $policy['lookUpUrl'] ? 'url' : 'nourl' ]
                            [ strtolower($policy['orderPossible']) ]
@@ -276,6 +300,7 @@ class openOrder extends webServiceServer {
    *   - orderPlacedMessage (optional)
    * or
    * - orderNotPlaced
+   *   - agencyCatalogueUrl
    *   - lookUpUrl (optional)
    *   - placeOrderError
    * - orderCondition
@@ -286,7 +311,7 @@ class openOrder extends webServiceServer {
       $por->orderNotPlaced->_value->placeOrderError->_value = 'authentication_error';
     }
     elseif (empty($param->serviceRequester->_value)) {
-      $por->orderNotPlaced->_value->placeOrderError->_value = 'serviceRequester is obligatory';
+      $por->orderNotPlaced->_value->placeOrderError->_value = 'no_serviceRequester';
     }
     else {
       if (isset($GLOBALS['HTTP_RAW_POST_DATA']))
@@ -323,7 +348,10 @@ class openOrder extends webServiceServer {
         if ($reason) $por->reason = $reason;
       }
       elseif ($policy['orderPossible'] != 'TRUE') {
-        $por->orderNotPlaced->_value->lookUpUrl->_value = $policy['lookUpUrl'];
+        if ($policy['agencyCatalogueUrl'])
+          $por->orderNotPlaced->_value->agencyCatalogueUrl->_value = $policy['agencyCatalogueUrl'];
+        if ($policy['lookUpUrl'])
+          $por->orderNotPlaced->_value->lookUpUrl->_value = $policy['lookUpUrl'];
         $por->orderNotPlaced->_value->placeOrderError->_value = $policy['orderPossibleReason'];
         if ($reason) $por->reason = $reason;
       }
@@ -384,8 +412,11 @@ class openOrder extends webServiceServer {
         $ubf_xml = $ubf->saveXML();
         //echo 'ubf: <pre>' . $ubf_xml . "</pre>\n"; die();
         if ($this->validate['ubf'] && !$this->validate_xml($ubf_xml, $this->validate['ubf'])) {
-          $por->orderNotPlaced->_value->lookUpUrl->_value = $policy['lookUpUrl'];
-          $por->orderNotPlaced->_value->placeOrderError->_value = 'Order does not validate';
+          if ($policy['agencyCatalogueUrl'])
+            $por->orderNotPlaced->_value->agencyCatalogueUrl->_value = $policy['agencyCatalogueUrl'];
+          if ($policy['lookUpUrl'])
+            $por->orderNotPlaced->_value->lookUpUrl->_value = $policy['lookUpUrl'];
+          $por->orderNotPlaced->_value->placeOrderError->_value = 'invalid_order';
         }
         else {
           if ($tgt_ref = $this->es_xmlupdate($ubf_xml, TRUE)) {
@@ -400,7 +431,7 @@ class openOrder extends webServiceServer {
                 $por->orderPlaced->_value->orderPlacedMessage->_value = $policy['orderPossibleReason'];
             }
             else
-              $por->orderPlaced->_value->orderPlacedMessage->_value = 'item available at pickupAgency, order accepted';
+              $por->orderPlaced->_value->orderPlacedMessage->_value = 'owned_accepted';
             if ($policy['orderConditionDanish']) {
               $cond_d->_attributes->language->_value = 'dan';
               $cond_d->_value = $policy['orderConditionDanish'];
@@ -415,7 +446,7 @@ class openOrder extends webServiceServer {
           else {
             verbose::log(ERROR, 'openorder:: xml_itemorder status: ' . $z3950->get_error_string());
             $por->orderNotPlaced->_value->lookUpUrl->_value = $policy['lookUpUrl'];
-            $por->orderNotPlaced->_value->placeOrderError->_value = 'Error sending order to ORS';
+            $por->orderNotPlaced->_value->placeOrderError->_value = 'ORS_error';
           }
           //var_dump($tgt_ref);
           //var_dump($z3950->get_error());
@@ -437,6 +468,7 @@ class openOrder extends webServiceServer {
    * - messageType
    * - orderId
    * - requesterId
+   * - responderId
    * Response:
    * - updateStatus
    * or
@@ -446,6 +478,14 @@ class openOrder extends webServiceServer {
     $rr = &$ret->resendResponse->_value;
     if (!$this->aaa->has_right('netpunkt.dk', 500))
       $rr->error->_value = 'authentication_error';
+    elseif (in_array($param->messageType->_value, array('orsEndUserRequest', 'orsReceipt'))
+        && !$this->check_library_group($param->authentication->_value->groupIdAut->_value, $param->requesterId->_value)) {
+      $rr->error->_value = 'operation not authorized for specified requesterId';
+    }
+    elseif ($param->messageType->_value == 'orsInterLibraryRequest' 
+        && !$this->check_library_group($param->authentication->_value->groupIdAut->_value, $param->responderId->_value)) {
+      $rr->error->_value = 'operation not authorized for specified responderId';
+    }
     else {
       $ubf = new DOMDocument('1.0', 'utf-8');
       $resend = $this->add_ubf_node($ubf, $ubf, 'resend', '', TRUE);
@@ -455,14 +495,14 @@ class openOrder extends webServiceServer {
 
       $ubf_xml = $ubf->saveXML();
       if ($this->validate['ubf'] && !$this->validate_xml($ubf_xml, $this->validate['ubf'])) {
-        $rr->error->_value = 'Order does not validate';
+        $rr->error->_value = 'invalid_order';
         verbose::log(FATAL, 'openorder:: answer: ' . $rr->error->_value);
       }
       else {
         if ($this->es_xmlupdate($ubf_xml)) {
-          $rr->updateStatus->_value = 'update sent';
+          $rr->updateStatus->_value = 'update_sent';
         } else {
-          $rr->error->_value = 'service error';
+          $rr->error->_value = 'service_error';
         }
       }
     }
@@ -494,6 +534,9 @@ class openOrder extends webServiceServer {
     $sr = &$ret->shippedResponse->_value;
     if (!$this->aaa->has_right('netpunkt.dk', 500))
       $sr->error->_value = 'authentication_error';
+    elseif (!$this->check_library_group($param->authentication->_value->groupIdAut->_value, $param->responderId->_value)) {
+      $sr->error->_value = 'operation not authorized for specified responderId';
+    }
     else {
       $ubf = new DOMDocument('1.0', 'utf-8');
       $shipped = $this->add_ubf_node($ubf, $ubf, 'shipped', '', TRUE);
@@ -508,14 +551,14 @@ class openOrder extends webServiceServer {
 
       $ubf_xml = $ubf->saveXML();
       if ($this->validate['ubf'] && !$this->validate_xml($ubf_xml, $this->validate['ubf'])) {
-        $sr->error->_value = 'Order does not validate';
+        $sr->error->_value = 'invalid_order';
         verbose::log(FATAL, 'openorder:: answer: ' . $sr->error->_value);
       }
       else {
         if ($this->es_xmlupdate($ubf_xml)) {
-          $sr->updateStatus->_value = 'update sent';
+          $sr->updateStatus->_value = 'update_sent';
         } else {
-          $sr->error->_value = 'service error';
+          $sr->error->_value = 'service_error';
         }
       }
     }
@@ -532,9 +575,12 @@ class openOrder extends webServiceServer {
    * Request:
    * - orderId
    * - requesterId
+   * - responderId
    * - forwardOrderId
    * - closed
+   * or
    * - providerOrderState
+   * or
    * - requesterOrderState
    * Response:
    * - updateStatus
@@ -545,6 +591,14 @@ class openOrder extends webServiceServer {
     $uor = &$ret->answerResponse->_value;
     if (!$this->aaa->has_right('netpunkt.dk', 500))
       $uor->error->_value = 'authentication_error';
+    elseif ((isset($param->closed->_value) || isset($param->requesterOrderState->_value))
+        && !$this->check_library_group($param->authentication->_value->groupIdAut->_value, $param->requesterId->_value)) {
+      $uor->error->_value = 'operation not authorized for specified requesterId';
+    }
+    elseif (isset($param->providerOrderState->_value)
+        && !$this->check_library_group($param->authentication->_value->groupIdAut->_value, $param->responderId->_value)) {
+      $uor->error->_value = 'operation not authorized for specified responderId';
+    }
     else {
       $ubf = new DOMDocument('1.0', 'utf-8');
       $update_order = $this->add_ubf_node($ubf, $ubf, 'updateOrder', '', TRUE);
@@ -557,14 +611,14 @@ class openOrder extends webServiceServer {
 
       $ubf_xml = $ubf->saveXML();
       if ($this->validate['ubf'] && !$this->validate_xml($ubf_xml, $this->validate['ubf'])) {
-        $uor->error->_value = 'Order does not validate';
+        $uor->error->_value = 'invalid_order';
         verbose::log(FATAL, 'openorder:: answer: ' . $uor->error->_value);
       }
       else {
         if ($this->es_xmlupdate($ubf_xml)) {
-          $uor->updateStatus->_value = 'update sent';
+          $uor->updateStatus->_value = 'update_sent';
         } else {
-          $uor->error->_value = 'service error';
+          $uor->error->_value = 'service_error';
         }
       }
     }
@@ -579,6 +633,45 @@ class openOrder extends webServiceServer {
 
   /*******************************************************************************/
 
+
+  /** \brief Checks if branch_id is part of agency_id
+   *
+   * return boolean
+   */
+  private function check_library_group($agency_id, $branch_id) {
+  static $curl;
+    // simple case
+    if ($agency_id == $branch_id
+      || strpos($this->config->get_value('openagency_override', 'setup'), $agency_id) !== FALSE) {
+      return TRUE;
+    }
+
+    // have to consult openagency
+    if (empty($curl)) {
+      $curl = new curl();
+      if (!$timeout = $this->config->get_value('openagency_timeout', 'setup'))
+        $timeout = 20;
+      $curl->set_option(CURLOPT_TIMEOUT, $timeout);
+    }
+    $agency_url = sprintf($this->config->get_value('openagency_url', 'setup'), $branch_id);
+    $agency_list = $curl->get($agency_url);
+
+    if ($curl->get_status('http_code') == 200) {
+      $dom = new DomDocument();
+      if (@ $dom->loadXML($agency_list)) {
+        return ($agency_id == $dom->getElementsByTagName('agencyId')->item(0)->nodeValue);
+      }
+      else {
+        verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: Cannot parse result from openAgency. Request: ' . $agency_url);
+      } 
+    } 
+    else {
+      verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: openagency http_error: ' . $curl->get_status('http_code'));
+    } 
+  
+    return FALSE;
+
+  }
 
   /** \brief Adds a ubf-text-node to a DOMDocument
    *
@@ -679,6 +772,7 @@ class openOrder extends webServiceServer {
         unlink($f_out);
         if ($es_answer) {
           $ret['lookUpUrl'] = $es_answer->lookupUrl;
+          $ret['agencyCatalogueUrl'] = $es_answer->agencyCatalogueUrl;
           $ret['orderPossible'] = ($es_answer->willReceive == 'true' ? 'TRUE' : 'FALSE');
           $ret['orderPossibleReason'] = $es_answer->note;
           $ret['orderConditionDanish'] = $es_answer->conditionDanish;
@@ -686,15 +780,15 @@ class openOrder extends webServiceServer {
           $ret['reason'] = $es_answer->reason;
         }
         else
-          $ret['checkOrderPolicyError'] = 'service unavailable';
+          $ret['checkOrderPolicyError'] = 'service_unavailable';
       }
       else {
-        $ret['checkOrderPolicyError'] = 'service unavailable';
+        $ret['checkOrderPolicyError'] = 'service_unavailable';
         verbose::log(ERROR, ESGAROTH_WRAPPER . ' did not write an answer in ' . $f_out);
       }
     }
     else
-      $ret['checkOrderPolicyError'] = 'service unavailable';
+      $ret['checkOrderPolicyError'] = 'service_unavailable';
 
     //var_dump($es_answer);
     return $ret;
