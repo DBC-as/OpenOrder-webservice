@@ -316,12 +316,14 @@ class openOrder extends webServiceServer {
     else {
       if (isset($GLOBALS['HTTP_RAW_POST_DATA']))
         verbose::log(DEBUG, 'openorder:: xml: ' . $GLOBALS['HTTP_RAW_POST_DATA']);
+/* Only use one type of identifier, either pid or record-agency/-id
       if ($param->pid->_value
        && empty($param->bibliographicRecordAgencyId->_value)
        && empty($param->bibliographicRecordId->_value)) {
         list($bibpart, $param->bibliographicRecordId->_value) = explode(':', $param->pid->_value);
         list($param->bibliographicRecordAgencyId->_value, $source) = explode('-', $bibpart);
       }
+*/
       if ($param->pickUpAgencyId->_value) {
         $policy = $this->check_order_policy(
                     $param->bibliographicRecordId->_value,
