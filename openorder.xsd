@@ -886,6 +886,7 @@
 			<xs:enumeration value="bibsys"/>
 			<xs:enumeration value="bibliotekdk"/>
 			<xs:enumeration value="danbib"/>
+                        <xs:enumeration value="dbcdatawell"/>
 			<xs:enumeration value="libris"/>
 			<xs:enumeration value="none"/>
 			<xs:enumeration value="pallesgavebod"/>
