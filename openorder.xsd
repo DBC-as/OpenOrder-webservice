@@ -96,9 +96,9 @@
 				<xs:element ref="oo:orderId" minOccurs="0"/>
 				<xs:element ref="oo:orderSystem"/>
 				<xs:element ref="oo:pagination" minOccurs="0"/>
-				<xs:element ref="oo:pid" minOccurs="0"/>
 				<xs:element ref="oo:pickUpAgencyId" minOccurs="0"/>
 				<xs:element ref="oo:pickUpAgencySubdivision" minOccurs="0"/>
+				<xs:element ref="oo:pid" minOccurs="0"/>
 				<xs:element ref="oo:placeOfPublication" minOccurs="0"/>
 				<xs:element ref="oo:publicationDate" minOccurs="0"/>
 				<xs:element ref="oo:publicationDateOfComponent" minOccurs="0"/>
