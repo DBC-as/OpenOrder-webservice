@@ -246,9 +246,11 @@ class openOrder extends webServiceServer {
       $copr->checkOrderPolicyError->_value = 'no_serviceRequester';
     }
     else {
+      if (!is_array($param->pid))
+        $param->pid = array($param->pid);
       $policy = $this->check_order_policy($param->bibliographicRecordId->_value,
                                           $this->strip_agency($param->bibliographicRecordAgencyId->_value),
-                                          $param->pid->_value,
+                                          $param->pid,
                                           $this->strip_agency($param->pickUpAgencyId->_value),
                                           $param->serviceRequester->_value);
       verbose::log(DEBUG, 'openorder:: policy: ' . print_r($policy, TRUE));
@@ -316,19 +318,13 @@ class openOrder extends webServiceServer {
     else {
       if (isset($GLOBALS['HTTP_RAW_POST_DATA']))
         verbose::log(DEBUG, 'openorder:: xml: ' . $GLOBALS['HTTP_RAW_POST_DATA']);
-/* Only use one type of identifier, either pid or record-agency/-id
-      if ($param->pid->_value
-       && empty($param->bibliographicRecordAgencyId->_value)
-       && empty($param->bibliographicRecordId->_value)) {
-        list($bibpart, $param->bibliographicRecordId->_value) = explode(':', $param->pid->_value);
-        list($param->bibliographicRecordAgencyId->_value, $source) = explode('-', $bibpart);
-      }
-*/
+      if (!is_array($param->pid))
+        $param->pid = array($param->pid);
       if ($param->pickUpAgencyId->_value) {
         $policy = $this->check_order_policy(
                     $param->bibliographicRecordId->_value,
                     $this->strip_agency($param->bibliographicRecordAgencyId->_value),
-                    $param->pid->_value,
+                    $param->pid,
                     $this->strip_agency($param->pickUpAgencyId->_value),
                     $param->serviceRequester->_value);
       }
@@ -384,7 +380,8 @@ class openOrder extends webServiceServer {
         $this->add_ubf_node($ubf, $order, 'orderId', $param->orderId->_value);		// ??
         $this->add_ubf_node($ubf, $order, 'orderSystem', $param->orderSystem->_value);
         $this->add_ubf_node($ubf, $order, 'pagination', $param->pagination->_value);
-        $this->add_ubf_node($ubf, $order, 'pid', $param->pid->_value);
+        foreach ($param->pid as $p)
+          $this->add_ubf_node($ubf, $order, 'pid', $p->_value);
         $this->add_ubf_node($ubf, $order, 'pickUpAgencyId', $this->strip_agency($param->pickUpAgencyId->_value));
         $this->add_ubf_node($ubf, $order, 'pickUpAgencySubdivision', $param->pickUpAgencySubdivision->_value);
         $this->add_ubf_node($ubf, $order, 'placeOfPublication', $param->placeOfPublication->_value);		// ??
@@ -713,13 +710,14 @@ class openOrder extends webServiceServer {
    *
    * return error-array or false
    */
-  private function check_order_policy($record_id, $record_agency, $pid, $pickup_agency, $requester) {
-    $fname = TMP_PATH .  md5($record_id .  $record_agency . $pid . $pickup_agency .  $requester . microtime(TRUE));
+  private function check_order_policy($record_id, $record_agency, $pids, $pickup_agency, $requester) {
     $os_obj->serviceRequester = $requester;
     $os_obj->bibliographicRecordId = $record_id;
     $os_obj->pickUpAgencyId = $pickup_agency;
     $os_obj->bibliographicRecordAgencyId = $record_agency;
-    $os_obj->pid = $pid;
+    foreach ($pids as $pid)
+      $os_obj->pids[] = $pid->_value;
+    $fname = TMP_PATH .  md5($record_id .  $record_agency . implode('_', $os_obj->pids) . $pickup_agency .  $requester . microtime(TRUE));
     return $this->exec_order_policy($os_obj, $fname);
   }
 
@@ -775,6 +773,7 @@ class openOrder extends webServiceServer {
         if ($es_answer) {
           $ret['lookUpUrl'] = $es_answer->lookupUrl;
           $ret['agencyCatalogueUrl'] = $es_answer->agencyCatalogueUrl;
+          $ret['agencyCatalogueUrls'] = $es_answer->agencyCatalogueUrls;
           $ret['orderPossible'] = ($es_answer->willReceive == 'true' ? 'TRUE' : 'FALSE');
           $ret['orderPossibleReason'] = $es_answer->note;
           $ret['orderConditionDanish'] = $es_answer->conditionDanish;
