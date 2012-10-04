@@ -39,10 +39,10 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="oo:authentication" minOccurs="0"/>
-				<xs:element ref="oo:bibliographicRecordId"/>
-				<xs:element ref="oo:bibliographicRecordAgencyId"/>
+				<xs:element ref="oo:bibliographicRecordId" minOccurs="0"/>
+				<xs:element ref="oo:bibliographicRecordAgencyId" minOccurs="0"/>
 				<xs:element ref="oo:pickUpAgencyId"/>
- 				<xs:element ref="oo:pid" minOccurs="0"/>
+ 				<xs:element ref="oo:pid" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element ref="oo:serviceRequester"/>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
 				<xs:element ref="oo:callback" minOccurs="0"/>
@@ -98,7 +98,7 @@
 				<xs:element ref="oo:pagination" minOccurs="0"/>
 				<xs:element ref="oo:pickUpAgencyId" minOccurs="0"/>
 				<xs:element ref="oo:pickUpAgencySubdivision" minOccurs="0"/>
-				<xs:element ref="oo:pid" minOccurs="0"/>
+ 				<xs:element ref="oo:pid" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element ref="oo:placeOfPublication" minOccurs="0"/>
 				<xs:element ref="oo:publicationDate" minOccurs="0"/>
 				<xs:element ref="oo:publicationDateOfComponent" minOccurs="0"/>
