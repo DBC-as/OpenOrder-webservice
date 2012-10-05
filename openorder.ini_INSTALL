@@ -8,7 +8,7 @@
 ;service_http_error = HTTP/1.0 503 Service Unavailable
 
 
-version = 2.0
+version = 2.1
 
 ; set only_https to accept https call only
 ;only_https = 1
@@ -163,6 +163,7 @@ action[checkOrderPolicy][authentication][] = userIdAut
 action[checkOrderPolicy][] = bibliographicRecordId
 action[checkOrderPolicy][] = bibliographicRecordAgencyId
 action[checkOrderPolicy][] = pickUpAgencyId
+action[checkOrderPolicy][] = pid
 action[checkOrderPolicy][] = serviceRequester
 action[checkOrderPolicy][] = outputType
 action[checkOrderPolicy][] = callback
@@ -193,6 +194,7 @@ action[placeOrder][] = orderSystem
 action[placeOrder][] = pagination
 action[placeOrder][] = pickUpAgencyId
 action[placeOrder][] = pickUpAgencySubdivision
+action[placeOrder][] = pid
 action[placeOrder][] = placeOfPublication
 action[placeOrder][] = publicationDate
 action[placeOrder][] = publicationDateOfComponent
