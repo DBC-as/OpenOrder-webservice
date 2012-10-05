@@ -47,9 +47,12 @@ openagency_timeout = 20
 ; list of auth-groups which can act on behalf of other libraries
 ;openagency_override = 010100
 
-;Extend Service target
-es_target = some_es_target
-es_authentication = user/group/password
+; Extend Service target
+; set es_target and es_authentication to send as z3950 update
+; set es_corba_bridge to send as request to henry
+;es_target = some_es_target
+;es_authentication = user/group/password
+;es_corba_bridge = http://etwas.dbc.dk/henry
 es_timeout = 30
 
 ; esgaroth script
