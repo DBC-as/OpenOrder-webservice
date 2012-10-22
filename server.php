@@ -735,8 +735,8 @@ class openOrder extends webServiceServer {
       $es_timeout = 30;
     }
   // send thru a z3950 NEP
-    if ($es_authentication = $this->config->get_value('es_authentication', 'setup') &&
-        $es_target = $this->config->get_value('es_target', 'setup')) {
+    if (($es_authentication = $this->config->get_value('es_authentication', 'setup')) &&
+        ($es_target = $this->config->get_value('es_target', 'setup'))) {
       $this->watch->start('xml_update');
       $z3950 = new z3950();
       $z3950->set_authentication($es_authentication, $_SERVER['REMOTE_ADDR']);
@@ -818,7 +818,7 @@ class openOrder extends webServiceServer {
           $ret['lookUpUrl'] = $es_answer->lookupUrl;
           $ret['agencyCatalogueUrl'] = $es_answer->agencyCatalogueUrl;
           $ret['agencyCatalogueUrls'] = $es_answer->agencyCatalogueUrls;
-          $ret['orderPossible'] = ($es_answer->willReceive == 'true' ? 'TRUE' : 'FALSE');
+          $ret['orderPossible'] = ($this->xs_boolean($es_answer->willReceive) ? 'TRUE' : 'FALSE');
           $ret['orderPossibleReason'] = $es_answer->note;
           $ret['orderConditionDanish'] = $es_answer->conditionDanish;
           $ret['orderConditionEnglish'] = $es_answer->conditionEnglish;
