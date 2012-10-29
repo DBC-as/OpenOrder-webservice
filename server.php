@@ -815,7 +815,8 @@ class openOrder extends webServiceServer {
         $es_answer = json_decode(file_get_contents($f_out));
         unlink($f_out);
         if ($es_answer) {
-          $ret['lookUpUrl'] = $es_answer->lookupUrl;
+          $ret['lookUpUrl'] = $es_answer->lookupurl;
+          $ret['lookUpUrls'] = $es_answer->lookupurls;
           $ret['agencyCatalogueUrl'] = $es_answer->agencyCatalogueUrl;
           $ret['agencyCatalogueUrls'] = $es_answer->agencyCatalogueUrls;
           $ret['orderPossible'] = ($this->xs_boolean($es_answer->willReceive) ? 'TRUE' : 'FALSE');
