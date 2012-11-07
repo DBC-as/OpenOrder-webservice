@@ -21,10 +21,10 @@
 
 
 /** \brief
- * Use ESGAROTH_WRAPPER for javascript execution - look in "safe_mode_exec_dir" (php.ini)
+ * Use order_policy_shell for javascript execution - look in "safe_mode_exec_dir" (php.ini)
  * for the prog.
  * The javascript may use services and their setup is found in the catalog refered
- * from ESGAROTH_WRAPPER
+ * from order_policy_shell
  */
 
 /*
@@ -66,7 +66,7 @@ class openOrder extends webServiceServer {
 
   public function __construct() {
     webServiceServer::__construct('openorder.ini');
-    define('ESGAROTH_WRAPPER', $this->config->get_value('esgaroth_wrapper', 'setup'));
+    define('ORDER_POLICY_SHELL', $this->config->get_value('order_policy_shell', 'setup'));
     define('TMP_PATH', $this->config->get_value('tmp_path', 'setup'));
     if ($host = $this->config->get_value('cache_host', 'setup')
      && $port = $this->config->get_value('cache_port', 'setup')
@@ -262,10 +262,13 @@ class openOrder extends webServiceServer {
         $notemap = $this->config->get_value('notemap', 'textmaps');
         if ($policy['agencyCatalogueUrl'])
           $copr->agencyCatalogueUrl->_value = $policy['agencyCatalogueUrl'];
-        if ($policy['lookUpUrl'])
-          $copr->lookUpUrl->_value = $policy['lookUpUrl'];
+        if ($policy['lookUpUrls']) {
+          foreach ($policy['lookUpUrls'] as $url) {
+            $copr->lookUpUrl[]->_value = $url;
+          }
+        }
         $copr->orderPossible->_value = $policy['orderPossible'];
-        if ($mapped_note = $notemap[ $policy['lookUpUrl'] ? 'url' : 'nourl' ]
+        if ($mapped_note = $notemap[ $policy['lookUpUrls'] ? 'url' : 'nourl' ]
                            [ strtolower($policy['orderPossible']) ]
                            [ strtolower($policy['orderPossibleReason']) ])
           $copr->orderPossibleReason->_value = $mapped_note;
@@ -350,8 +353,11 @@ class openOrder extends webServiceServer {
       elseif ($policy['orderPossible'] != 'TRUE') {
         if ($policy['agencyCatalogueUrl'])
           $por->orderNotPlaced->_value->agencyCatalogueUrl->_value = $policy['agencyCatalogueUrl'];
-        if ($policy['lookUpUrl'])
-          $por->orderNotPlaced->_value->lookUpUrl->_value = $policy['lookUpUrl'];
+        if ($policy['lookUpUrls']) {
+          foreach ($policy['lookUpUrls'] as $url) {
+            $por->orderNotPlaced->_value->lookUpUrl[]->_value = $url;
+          }
+        }
         $por->orderNotPlaced->_value->placeOrderError->_value = $policy['orderPossibleReason'];
         if ($reason) $por->reason = $reason;
       }
@@ -415,8 +421,11 @@ class openOrder extends webServiceServer {
         if ($this->validate['ubf'] && !$this->validate_xml($ubf_xml, $this->validate['ubf'])) {
           if ($policy['agencyCatalogueUrl'])
             $por->orderNotPlaced->_value->agencyCatalogueUrl->_value = $policy['agencyCatalogueUrl'];
-          if ($policy['lookUpUrl'])
-            $por->orderNotPlaced->_value->lookUpUrl->_value = $policy['lookUpUrl'];
+          if ($policy['lookUpUrls']) {
+            foreach ($policy['lookUpUrls'] as $url) {
+              $por->orderNotPlaced->_value->lookUpUrl[]->_value = $url;
+            }
+          }
           $por->orderNotPlaced->_value->placeOrderError->_value = 'invalid_order';
         }
         else {
@@ -424,7 +433,7 @@ class openOrder extends webServiceServer {
             $por->orderPlaced->_value->orderId->_value = $tgt_ref;
             if ($policy['orderPossibleReason']) {
               $notemap = $this->config->get_value('notemap', 'textmaps');
-              if ($mapped_note = $notemap[ $policy['lookUpUrl'] ? 'url' : 'nourl' ]
+              if ($mapped_note = $notemap[ $policy['lookUpUrls'] ? 'url' : 'nourl' ]
                                  [ 'true' ]
                                  [ strtolower($policy['orderPossibleReason']) ])
                 $por->orderPlaced->_value->orderPlacedMessage->_value = $mapped_note;
@@ -446,7 +455,11 @@ class openOrder extends webServiceServer {
           }
           else {
             verbose::log(ERROR, 'openorder:: xml_itemorder status: ' . $this->error_string);
-            $por->orderNotPlaced->_value->lookUpUrl->_value = $policy['lookUpUrl'];
+            if ($policy['lookUpUrls']) {
+              foreach ($policy['lookUpUrls'] as $url) {
+                $por->orderNotPlaced->_value->lookUpUrl[]->_value = $url;
+              }
+            }
             $por->orderNotPlaced->_value->placeOrderError->_value = 'ORS_error';
           }
           //var_dump($tgt_ref);
@@ -795,9 +808,9 @@ class openOrder extends webServiceServer {
     return FALSE;
   }
 
-  /** \brief wrapper for exec of esgaroth-shell
+  /** \brief wrapper for exec of order policy-shell
    *
-   * Use external esgaroth program to facilitate javascripts
+   * Use external order policy program to facilitate javascripts
    *
    * return error-array or false
    */
@@ -807,10 +820,10 @@ class openOrder extends webServiceServer {
     if ($fp = fopen($f_in, 'w')) {
       fwrite($fp, json_encode($os_obj));
       fclose($fp);
-      $es_status = exec(ESGAROTH_WRAPPER ." $f_in $f_out $par");
+      $es_status = exec(ORDER_POLICY_SHELL ." $f_in $f_out $par");
       unlink($f_in);
       if ($es_status)
-        verbose::log(ERROR, ESGAROTH_WRAPPER . ' returned error-code: ' . $es_status);
+        verbose::log(ERROR, ORDER_POLICY_SHELL . ' returned error-code: ' . $es_status);
       if (is_file($f_out)) {
         $es_answer = json_decode(file_get_contents($f_out));
         unlink($f_out);
@@ -830,7 +843,7 @@ class openOrder extends webServiceServer {
       }
       else {
         $ret['checkOrderPolicyError'] = 'service_unavailable';
-        verbose::log(ERROR, ESGAROTH_WRAPPER . ' did not write an answer in ' . $f_out);
+        verbose::log(ERROR, ORDER_POLICY_SHELL . ' did not write an answer in ' . $f_out);
       }
     }
     else
