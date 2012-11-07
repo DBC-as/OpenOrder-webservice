@@ -55,8 +55,8 @@ openagency_timeout = 20
 ;es_corba_bridge = http://etwas.dbc.dk/henry
 es_timeout = 30
 
-; esgaroth script
-esgaroth_wrapper = /var/www/php_exec/EsgarothShell
+; order policy script
+order_policy_shell = /var/www/php_exec/OrderPolicy.sh
 
 ; path to temp-dir where writing/reading/deleting files are allowed
 tmp_path = /tmp/
