@@ -57,7 +57,7 @@
 			<xs:choice>
 				<xs:sequence>
                     <xs:element ref="oo:agencyCatalogueUrl" minOccurs="0"/>
-					<xs:element ref="oo:lookUpUrl" minOccurs="0"/>
+					<xs:element ref="oo:lookUpUrl" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element ref="oo:orderPossible"/>
 					<xs:element ref="oo:orderPossibleReason" minOccurs="0"/>
 					<xs:element ref="oo:orderCondition" minOccurs="0" maxOccurs="2"/>
@@ -445,7 +445,7 @@
 		<xs:complexType>
 			<xs:sequence>
                 <xs:element ref="oo:agencyCatalogueUrl" minOccurs="0"/>
-				<xs:element ref="oo:lookUpUrl" minOccurs="0"/>
+				<xs:element ref="oo:lookUpUrl" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element ref="oo:placeOrderError">
 					<xs:annotation>
 						<xs:documentation xml:lang="en">Message returned by the service if an order can not be placed or an error occurs.</xs:documentation>
