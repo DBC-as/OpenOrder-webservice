@@ -838,16 +838,20 @@ class openOrder extends webServiceServer {
           $ret['orderConditionEnglish'] = $es_answer->conditionEnglish;
           $ret['reason'] = $es_answer->reason;
         }
-        else
+        else {
+          verbose::log(ERROR, ORDER_POLICY_SHELL . ' could not decode answer in ' . $f_out);
           $ret['checkOrderPolicyError'] = 'service_unavailable';
+        }
       }
       else {
-        $ret['checkOrderPolicyError'] = 'service_unavailable';
         verbose::log(ERROR, ORDER_POLICY_SHELL . ' did not write an answer in ' . $f_out);
+        $ret['checkOrderPolicyError'] = 'service_unavailable';
       }
     }
-    else
+    else {
+      verbose::log(ERROR, 'Could not open file ' . $f_in);
       $ret['checkOrderPolicyError'] = 'service_unavailable';
+    }
 
     //var_dump($es_answer);
     return $ret;
