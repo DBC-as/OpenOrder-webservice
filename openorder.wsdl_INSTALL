@@ -47,6 +47,12 @@
 	<wsdl:message name="updateOrderResponse">
 		<wsdl:part name="body" element="oo:updateOrderResponse"/>
 	</wsdl:message>
+	<wsdl:message name="incrementRedirectStatRequest">
+		<wsdl:part name="body" element="oo:incrementRedirectStatRequest"/>
+	</wsdl:message>
+	<wsdl:message name="incrementRedirectStatResponse">
+		<wsdl:part name="body" element="oo:incrementRedirectStatResponse"/>
+	</wsdl:message>
 	<wsdl:portType name="checkElectronicDeliveryPortType">
 		<wsdl:operation name="checkElectronicDelivery">
 			<wsdl:input message="oow:checkElectronicDeliveryRequest"/>
@@ -87,6 +93,12 @@
 		<wsdl:operation name="updateOrder">
 			<wsdl:input message="oow:updateOrderRequest"/>
 			<wsdl:output message="oow:updateOrderResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="incrementRedirectStatPortType">
+		<wsdl:operation name="incrementRedirectStat">
+			<wsdl:input message="oow:incrementRedirectStatRequest"/>
+			<wsdl:output message="oow:incrementRedirectStatResponse"/>
 		</wsdl:operation>
 	</wsdl:portType>
 	<wsdl:binding name="checkElectronicDeliverySoapBinding" type="oow:checkElectronicDeliveryPortType">
@@ -173,27 +185,42 @@
 			</wsdl:output>
 		</wsdl:operation>
 	</wsdl:binding>
+	<wsdl:binding name="incrementRedirectStatSoapBinding" type="oow:incrementRedirectStatPortType">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="incrementRedirectStat">
+			<soap:operation soapAction="incrementRedirectStat"/>
+			<wsdl:input name="incrementRedirectStatRequest">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="incrementRedirectStatResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
 	<wsdl:service name="openOrderService">
 		<wsdl:port name="checkElectronicDeliveryPortType" binding="oow:checkElectronicDeliverySoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.1/"/>
+			<soap:address location="http://openorder.addi.dk/2.2/"/>
 		</wsdl:port>
 		<wsdl:port name="placeOrderPortType" binding="oow:placeOrderSoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.1/"/>
+			<soap:address location="http://openorder.addi.dk/2.2/"/>
 		</wsdl:port>
 		<wsdl:port name="checkOrderPolicyPortType" binding="oow:checkOrderPolicySoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.1/"/>
+			<soap:address location="http://openorder.addi.dk/2.2/"/>
 		</wsdl:port>
 		<wsdl:port name="answerPortType" binding="oow:answerSoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.1/"/>
+			<soap:address location="http://openorder.addi.dk/2.2/"/>
 		</wsdl:port>
 		<wsdl:port name="resendPortType" binding="oow:resendSoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.1/"/>
+			<soap:address location="http://openorder.addi.dk/2.2/"/>
 		</wsdl:port>
 		<wsdl:port name="shippedPortType" binding="oow:shippedSoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.1/"/>
+			<soap:address location="http://openorder.addi.dk/2.2/"/>
 		</wsdl:port>		
 		<wsdl:port name="updateOrderPortType" binding="oow:updateOrderSoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.1/"/>
+			<soap:address location="http://openorder.addi.dk/2.2/"/>
+		</wsdl:port>		
+		<wsdl:port name="incrementRedirectStatPortType" binding="oow:incrementRedirectStatSoapBinding">
+			<soap:address location="http://openorder.addi.dk/2.2/"/>
 		</wsdl:port>		
 	</wsdl:service>
 </wsdl:definitions>

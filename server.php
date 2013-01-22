@@ -203,7 +203,7 @@ class openOrder extends webServiceServer {
           }
         }
         catch (ociException $e) {
-          verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI connect error: ' . $oci->get_error_string());
+          verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI select error: ' . $oci->get_error_string());
           $cedr->error->_value = 'service_unavailable';
         }
 
@@ -602,7 +602,7 @@ class openOrder extends webServiceServer {
    * - error
    */
   public function updateOrder($param) {
-    $uor = &$ret->answerResponse->_value;
+    $uor = &$ret->updateOrderResponse->_value;
     if (!$this->aaa->has_right('netpunkt.dk', 500))
       $uor->error->_value = 'authentication_error';
     elseif ((isset($param->closed->_value) || isset($param->requesterOrderState->_value))
@@ -638,6 +638,58 @@ class openOrder extends webServiceServer {
     }
     if (DEBUG_ON) {
       var_dump($uor);
+      var_dump($param);
+    }
+
+    return $ret;
+  }
+
+  /** \brief
+   *
+   * Request:
+   * - agencyId
+   * Response:
+   * - incrementRedirectStatStatus
+   * or
+   * - error
+   */
+  public function incrementRedirectStat($param) {
+    $irss = &$ret->incrementRedirectStatResponse->_value;
+    if (!$this->aaa->has_right('netpunkt.dk', 500))
+      $irss->error->_value = 'authentication_error';
+    else {
+      $agency = $this->strip_agency($param->agencyId->_value);
+      require_once('OLS_class_lib/oci_class.php');
+      $oci = new Oci($this->config->get_value('redirect_credentials','setup'));
+      $oci->set_charset('UTF8');
+      try {
+        $oci->connect();
+      }
+      catch (ociException $e) {
+        verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI connect error: ' . $oci->get_error_string());
+        $irss->error->_value = 'service_unavailable';
+      }
+      try {
+        $oci->bind('bind_bib_nr', $agency);
+        $oci->set_query('UPDATE redirect_stats
+                            SET transactions = transactions+1
+                          WHERE bib_nr = :bind_bib_nr
+                            AND creation_date = trunc(sysdate)');
+        if (! $oci->get_num_rows()) {
+          $oci->bind('bind_bib_nr', $agency);
+          $oci->set_query('INSERT INTO redirect_stats (bib_nr, transactions)
+                           VALUES (:bind_bib_nr, 1)');
+        }
+        $oci->commit();
+      }
+      catch (ociException $e) {
+        verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI update error: ' . $oci->get_error_string());
+        $irss->error->_value = 'service_unavailable';
+      }
+      $irss->incrementRedirectStatStatus->_value = 'true';
+    }
+    if (DEBUG_ON) {
+      var_dump($irss);
       var_dump($param);
     }
 

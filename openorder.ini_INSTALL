@@ -8,7 +8,7 @@
 ;service_http_error = HTTP/1.0 503 Service Unavailable
 
 
-version = 2.1
+version = 2.2
 
 ; set only_https to accept https call only
 ;only_https = 1
@@ -35,6 +35,7 @@ soapAction[placeOrder] = placeOrderRequest
 soapAction[resend] = resendRequest
 soapAction[shipped] = shippedRequest
 soapAction[updateOrder] = updateOrderRequest
+soapAction[incrementRedirectStat] = incrementRedirectStatRequest
 
 ; prefixes and namespaces
 xmlns[NONE] = http://oss.dbc.dk/ns/openorder
@@ -69,6 +70,9 @@ logfile = /tmp/openorder.log
 
 ; login for copydan table
 copydan_credentials = ora_user/ora_passwd@some.server.dk
+
+; login for redirect_stat table
+redirect_credentials = ora_user/ora_passwd@some.server.dk
 
 ; set verboselevel
 ;   WARNING - simple warnings
@@ -252,6 +256,14 @@ action[updateOrder][] = providerOrderState
 action[updateOrder][] = requesterOrderState
 action[updateOrder][] = outputType
 action[updateOrder][] = callback
+
+action[incrementRedirectStat][authentication][] = groupIdAut
+action[incrementRedirectStat][authentication][] = passwordAut
+action[incrementRedirectStat][authentication][] = userIdAut
+action[incrementRedirectStat][] = AgencyId
+action[incrementRedirectStat][] = outputType
+action[incrementRedirectStat][] = callback
+
 
 
 [howru]
