@@ -165,6 +165,7 @@
 				<xs:element ref="oo:providerOrderState" minOccurs="0"/>
 				<xs:element ref="oo:requesterId"/>
 				<xs:element ref="oo:responderId"/>
+				<xs:element ref="oo:serviceRequester"/>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
 				<xs:element ref="oo:callback" minOccurs="0"/>
 			</xs:sequence>
@@ -189,6 +190,7 @@
 				<xs:element ref="oo:orderId"/>
 				<xs:element ref="oo:requesterId"/>
 				<xs:element ref="oo:responderId"/>
+				<xs:element ref="oo:serviceRequester"/>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
 				<xs:element ref="oo:callback" minOccurs="0"/>
 			</xs:sequence>
@@ -212,6 +214,7 @@
 				<xs:element ref="oo:orderId"/>
 				<xs:element ref="oo:requesterId"/>
 				<xs:element ref="oo:responderId"/>
+				<xs:element ref="oo:serviceRequester"/>
 				<xs:element ref="oo:shippedDate"/>
 				<xs:element ref="oo:shippedServiceType" minOccurs="0"/>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
@@ -243,6 +246,7 @@
 					<xs:element ref="oo:providerOrderState"/>
 					<xs:element ref="oo:requesterOrderState"/>
 				</xs:choice>
+				<xs:element ref="oo:serviceRequester"/>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
 				<xs:element ref="oo:callback" minOccurs="0"/>
 			</xs:sequence>

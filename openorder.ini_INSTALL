@@ -8,7 +8,7 @@
 ;service_http_error = HTTP/1.0 503 Service Unavailable
 
 
-version = 2.2
+version = 2.3
 
 ; set only_https to accept https call only
 ;only_https = 1
@@ -38,7 +38,8 @@ soapAction[updateOrder] = updateOrderRequest
 soapAction[incrementRedirectStat] = incrementRedirectStatRequest
 
 ; prefixes and namespaces
-xmlns[NONE] = http://oss.dbc.dk/ns/openorder
+default_namespace_prefix = oo
+xmlns[oo] = http://oss.dbc.dk/ns/openorder
 
 ; openagency
 ; url to openagency
@@ -150,6 +151,7 @@ action[answer][] = providerAnswerReason
 action[answer][] = providerOrderState
 action[answer][] = requesterId
 action[answer][] = responderId
+action[answer][] = serviceRequester
 action[answer][] = outputType
 action[answer][] = callback
 
@@ -185,6 +187,8 @@ action[placeOrder][] = callNumber
 action[placeOrder][] = copy
 action[placeOrder][] = edition
 action[placeOrder][] = exactEdition
+action[placeOrder][] = fullTextLink
+action[placeOrder][] = fullTextLinkType
 action[placeOrder][] = isbn
 action[placeOrder][] = issn
 action[placeOrder][] = issue
@@ -203,6 +207,9 @@ action[placeOrder][] = placeOfPublication
 action[placeOrder][] = publicationDate
 action[placeOrder][] = publicationDateOfComponent
 action[placeOrder][] = publisher
+action[placeOrder][] = requesterId
+action[placeOrder][] = requesterNote
+action[placeOrder][] = responderId
 action[placeOrder][] = seriesTitelNumber
 action[placeOrder][] = serviceRequester
 action[placeOrder][] = title
@@ -228,6 +235,7 @@ action[resend][authentication][] = userIdAut
 action[resend][] = messageType
 action[resend][] = orderId
 action[resend][] = requesterId
+action[resend][] = serviceRequester
 action[resend][] = outputType
 action[resend][] = callback
 
@@ -240,6 +248,7 @@ action[shipped][] = itemId
 action[shipped][] = orderId
 action[shipped][] = requesterId
 action[shipped][] = responderId
+action[shipped][] = serviceRequester
 action[shipped][] = shippedDate
 action[shipped][] = shippedServiceType
 action[shipped][] = outputType
@@ -254,6 +263,7 @@ action[updateOrder][] = forwardOrderId
 action[updateOrder][] = closed
 action[updateOrder][] = providerOrderState
 action[updateOrder][] = requesterOrderState
+action[updateOrder][] = serviceRequester
 action[updateOrder][] = outputType
 action[updateOrder][] = callback
 

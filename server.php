@@ -88,6 +88,7 @@ class openOrder extends webServiceServer {
    * - providerOrderState
    * - requesterId
    * - responderId
+   * - serviceRequester
    * Response:
    * - updateStatus
    * or
@@ -122,6 +123,7 @@ class openOrder extends webServiceServer {
         $this->add_ubf_node($ubf, $answer, 'providerOrderState', $param->providerOrderState->_value);
         $this->add_ubf_node($ubf, $answer, 'requesterId', $param->requesterId->_value);
         $this->add_ubf_node($ubf, $answer, 'responderId', $param->responderId->_value);
+        $this->add_ubf_node($ubf, $answer, 'serviceRequester', $param->serviceRequester->_value);
   
         $ubf_xml = $ubf->saveXML();
         if ($this->validate['ubf'] && !$this->validate_xml($ubf_xml, $this->validate['ubf'])) {
@@ -399,7 +401,7 @@ class openOrder extends webServiceServer {
         $this->add_ubf_node($ubf, $order, 'requesterId', $param->requesterId->_value);
         $this->add_ubf_node($ubf, $order, 'responderId', $param->responderId->_value);
         $this->add_ubf_node($ubf, $order, 'seriesTitelNumber', $param->seriesTitelNumber->_value);
-        //$this->add_ubf_node($ubf, $order, 'serviceRequester', $param->serviceRequester->_value);
+        $this->add_ubf_node($ubf, $order, 'serviceRequester', $param->serviceRequester->_value);
         $this->add_ubf_node($ubf, $order, 'title', $param->title->_value);
         $this->add_ubf_node($ubf, $order, 'titleOfComponent', $param->titleOfComponent->_value);
         $this->add_ubf_node($ubf, $order, 'userAddress', $param->userAddress->_value);
@@ -483,6 +485,7 @@ class openOrder extends webServiceServer {
    * - orderId
    * - requesterId
    * - responderId
+   * - serviceRequester
    * Response:
    * - updateStatus
    * or
@@ -506,6 +509,7 @@ class openOrder extends webServiceServer {
       $this->add_ubf_node($ubf, $resend, 'messageType', $param->messageType->_value);
       $this->add_ubf_node($ubf, $resend, 'orderId', $param->orderId->_value);
       $this->add_ubf_node($ubf, $resend, 'requesterId', $param->requesterId->_value);
+      $this->add_ubf_node($ubf, $resend, 'serviceRequester', $param->serviceRequester->_value);
 
       $ubf_xml = $ubf->saveXML();
       if ($this->validate['ubf'] && !$this->validate_xml($ubf_xml, $this->validate['ubf'])) {
@@ -537,6 +541,7 @@ class openOrder extends webServiceServer {
    * - orderId
    * - requesterId
    * - responderId
+   * - serviceRequester
    * - shippedDate
    * - shippedServiceType
    * Response:
@@ -560,6 +565,7 @@ class openOrder extends webServiceServer {
       $this->add_ubf_node($ubf, $shipped, 'orderId', $param->orderId->_value);
       $this->add_ubf_node($ubf, $shipped, 'requesterId', $param->requesterId->_value);
       $this->add_ubf_node($ubf, $shipped, 'responderId', $param->responderId->_value);
+      $this->add_ubf_node($ubf, $shipped, 'serviceRequester', $param->serviceRequester->_value);
       $this->add_ubf_node($ubf, $shipped, 'shippedDate', $param->shippedDate->_value);
       $this->add_ubf_node($ubf, $shipped, 'shippedServiceType', $param->shippedServiceType->_value);
 
@@ -596,6 +602,7 @@ class openOrder extends webServiceServer {
    * - providerOrderState
    * or
    * - requesterOrderState
+   * - serviceRequester
    * Response:
    * - updateStatus
    * or
@@ -622,6 +629,7 @@ class openOrder extends webServiceServer {
       $this->add_ubf_node($ubf, $update_order, 'closed', $param->closed->_value);
       $this->add_ubf_node($ubf, $update_order, 'providerOrderState', $param->providerOrderState->_value);
       $this->add_ubf_node($ubf, $update_order, 'requesterOrderState', $param->requesterOrderState->_value);
+      $this->add_ubf_node($ubf, $update_order, 'serviceRequester', $param->serviceRequester->_value);
 
       $ubf_xml = $ubf->saveXML();
       if ($this->validate['ubf'] && !$this->validate_xml($ubf_xml, $this->validate['ubf'])) {
