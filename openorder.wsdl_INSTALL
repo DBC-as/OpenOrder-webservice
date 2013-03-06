@@ -199,28 +199,28 @@
 	</wsdl:binding>
 	<wsdl:service name="openOrderService">
 		<wsdl:port name="checkElectronicDeliveryPortType" binding="oow:checkElectronicDeliverySoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.2/"/>
+			<soap:address location="http://openorder.addi.dk/2.3/"/>
 		</wsdl:port>
 		<wsdl:port name="placeOrderPortType" binding="oow:placeOrderSoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.2/"/>
+			<soap:address location="http://openorder.addi.dk/2.3/"/>
 		</wsdl:port>
 		<wsdl:port name="checkOrderPolicyPortType" binding="oow:checkOrderPolicySoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.2/"/>
+			<soap:address location="http://openorder.addi.dk/2.3/"/>
 		</wsdl:port>
 		<wsdl:port name="answerPortType" binding="oow:answerSoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.2/"/>
+			<soap:address location="http://openorder.addi.dk/2.3/"/>
 		</wsdl:port>
 		<wsdl:port name="resendPortType" binding="oow:resendSoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.2/"/>
+			<soap:address location="http://openorder.addi.dk/2.3/"/>
 		</wsdl:port>
 		<wsdl:port name="shippedPortType" binding="oow:shippedSoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.2/"/>
+			<soap:address location="http://openorder.addi.dk/2.3/"/>
 		</wsdl:port>		
 		<wsdl:port name="updateOrderPortType" binding="oow:updateOrderSoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.2/"/>
+			<soap:address location="http://openorder.addi.dk/2.3/"/>
 		</wsdl:port>		
 		<wsdl:port name="incrementRedirectStatPortType" binding="oow:incrementRedirectStatSoapBinding">
-			<soap:address location="http://openorder.addi.dk/2.2/"/>
+			<soap:address location="http://openorder.addi.dk/2.3/"/>
 		</wsdl:port>		
 	</wsdl:service>
 </wsdl:definitions>
