@@ -758,6 +758,15 @@ class openOrder extends webServiceServer {
     }
   }
 
+  /** \brief Return the issn for a given pid - or error
+   * 
+   */
+  private function pid_to_issn($pid) {
+    $fname = TMP_PATH .  md5($responder_id . microtime(TRUE));
+    $os_obj->pid = $pid;
+    return $this->exec_order_policy($os_obj, $fname, 'pidToIssn');
+  }
+
   /** \brief Check nonVerifiedIll order policy for a given Agency
    *
    * return error-array or false
