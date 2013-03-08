@@ -91,13 +91,13 @@ verbose = WARNING+ERROR+FATAL+STAT+TIMER+TRACE+DEBUG+Z3950+OCI
 dump_timer = openorder(%s)
 
 [textmaps]
-notemap["nourl"]["true"]["agency owns material"] = owned_accepted
-notemap["url"]["true"]["agency owns material"] = owned_accepted
-notemap["nourl"]["true"]["other agency owns material"] = not_owned_ILL_loc
-notemap["nourl"]["false"]["agency owns material"] = owned_wrong_mediumType
-notemap["nourl"]["false"]["other agency owns material"] = not_owned_wrong_ILL_mediumType
-notemap["nourl"]["false"]["no holdings"] = not_owned_no_ILL_loc
-notemap["url"]["false"]["agency owns material"] = owned_own_catalogue
+notemap[nourl][true][agency owns material] = owned_accepted
+notemap[url][true][agency owns material] = owned_accepted
+notemap[nourl][true][other agency owns material] = not_owned_ILL_loc
+notemap[nourl][false][agency owns material] = owned_wrong_mediumType
+notemap[nourl][false][other agency owns material] = not_owned_wrong_ILL_mediumType
+notemap[nourl][false][no holdings] = not_owned_no_ILL_loc
+notemap[url][false][agency owns material] = owned_own_catalogue
 
 [aaa]
 ; aaa Authentication, Access control and Accounting
