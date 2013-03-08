@@ -166,9 +166,10 @@ class openOrder extends webServiceServer {
     }
     else {
       $agency = '820010';  // sofar only 820010 can deliver electronically
+      $issn = $this->normalize_issn($param->issn->_value);
       if ($this->cache) {
         $cache_key = 'OO_ced_' . $this->version . $param->serviceRequester->_value . 
-                                                  $param->issn->_value . 
+                                                  $issn . 
                                                   $agency;
         if ($ret = $this->cache->get($cache_key)) {
           verbose::log(STAT, 'Cache hit');
@@ -192,7 +193,7 @@ class openOrder extends webServiceServer {
           $cedr->error->_value = 'service_unavailable';
         }
         try {
-          $oci->bind('bind_issn', $param->issn->_value);
+          $oci->bind('bind_issn', $issn);
           $oci->set_query('SELECT *
                              FROM copydan
                             WHERE issn = :bind_issn');
@@ -939,6 +940,13 @@ class openOrder extends webServiceServer {
    */
   private function strip_agency($id) {
     return preg_replace('/\D/', '', $id);
+  }
+
+  /** \brief
+   *  return only digits and X
+   */
+  private function normalize_issn($issn) {
+    return preg_replace('/[^0-9X]/', '', strtoupper($issn));
   }
 
 }
