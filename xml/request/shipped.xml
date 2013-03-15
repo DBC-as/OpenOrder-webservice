@@ -13,6 +13,7 @@
          <open:orderId>?</open:orderId>
          <open:requesterId>?</open:requesterId>
          <open:responderId>?</open:responderId>
+         <open:serviceRequester>?</open:serviceRequester>
          <open:shippedDate>?</open:shippedDate>
          <open:shippedServiceType>?</open:shippedServiceType>
          <!--Optional:-->

@@ -14,6 +14,7 @@
          <open:closed>?</open:closed>
          <open:providerOrderState>?</open:providerOrderState>
          <open:requesterOrderState>?</open:requesterOrderState>
+         <open:serviceRequester>?</open:serviceRequester>
          <!--Optional:-->
          <open:outputType>?</open:outputType>
          <!--Optional:-->

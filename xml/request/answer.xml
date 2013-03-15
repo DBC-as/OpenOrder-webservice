@@ -18,6 +18,7 @@
          <open:providerOrderState>?</open:providerOrderState>
          <open:requesterId>?</open:requesterId>
          <open:responderId>?</open:responderId>
+         <open:serviceRequester>?</open:serviceRequester>
          <!--Optional:-->
          <open:outputType>?</open:outputType>
          <!--Optional:-->

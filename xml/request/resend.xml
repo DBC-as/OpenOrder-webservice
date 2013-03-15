@@ -10,6 +10,7 @@
          <open:messageType>?</open:messageType>
          <open:orderId>?</open:orderId>
          <open:requesterId>?</open:requesterId>
+         <open:serviceRequester></open:serviceRequester>
          <!--Optional:-->
          <open:outputType>?</open:outputType>
          <!--Optional:-->
