@@ -2,7 +2,6 @@
    <soapenv:Header/>
    <soapenv:Body>
       <open:checkElectronicDeliveryRequest>
-         <!--Optional:-->
          <open:authentication>
             <open:groupIdAut>?</open:groupIdAut>
             <open:passwordAut>?</open:passwordAut>

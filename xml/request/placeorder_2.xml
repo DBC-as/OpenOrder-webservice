@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:oo="http://oss.dbc.dk/ns/openorder"><SOAP-ENV:Body>
       <oo:placeOrderRequest>
+         <oo:authentication>
+            <oo:groupIdAut>010100</oo:groupIdAut>
+            <oo:passwordAut>20Koster</oo:passwordAut>
+            <oo:userIdAut>netpunkt</oo:userIdAut>
+         </oo:authentication>
          <oo:author></oo:author>
          <oo:authorOfComponent></oo:authorOfComponent>
          <oo:bibliographicCategory></oo:bibliographicCategory>

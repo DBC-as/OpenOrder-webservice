@@ -2,14 +2,13 @@
    <soapenv:Header/>
    <soapenv:Body>
       <open:placeOrderRequest>
-         <!--Optional:-->
-         <open:articleDirect>?</open:articleDirect>
-         <!--Optional:-->
          <open:authentication>
             <open:groupIdAut>?</open:groupIdAut>
             <open:passwordAut>?</open:passwordAut>
             <open:userIdAut>?</open:userIdAut>
          </open:authentication>
+         <!--Optional:-->
+         <open:articleDirect>?</open:articleDirect>
          <!--Optional:-->
          <open:author>?</open:author>
          <!--Optional:-->

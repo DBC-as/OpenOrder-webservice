@@ -2,7 +2,6 @@
    <soapenv:Header/>
    <soapenv:Body>
       <open:resendRequest>
-         <!--Optional:-->
          <open:authentication>
             <open:groupIdAut>?</open:groupIdAut>
             <open:passwordAut>?</open:passwordAut>
