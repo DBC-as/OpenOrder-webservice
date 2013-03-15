@@ -10,7 +10,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="oo:authentication" minOccurs="0"/>
+				<xs:element ref="oo:authentication"/>
 				<xs:element ref="oo:issn"/>
 				<xs:element ref="oo:serviceRequester" minOccurs="0"/>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
@@ -38,7 +38,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="oo:authentication" minOccurs="0"/>
+				<xs:element ref="oo:authentication"/>
 				<xs:element ref="oo:bibliographicRecordId" minOccurs="0"/>
 				<xs:element ref="oo:bibliographicRecordAgencyId" minOccurs="0"/>
 				<xs:element ref="oo:pickUpAgencyId"/>
@@ -72,8 +72,8 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="oo:authentication"
 				<xs:element ref="oo:articleDirect" minOccurs="0"/>
-				<xs:element ref="oo:authentication" minOccurs="0"/>
 				<xs:element ref="oo:author" minOccurs="0"/>
 				<xs:element ref="oo:authorOfComponent" minOccurs="0"/>
 				<xs:element ref="oo:bibliographicCategory" minOccurs="0"/>
@@ -147,7 +147,7 @@
 	<xs:element name="answerRequest">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="oo:authentication" minOccurs="0"/>
+				<xs:element ref="oo:authentication"/>
 				<xs:element ref="oo:expectedDelivery" minOccurs="0">
 					<xs:annotation>
 						<xs:documentation xml:lang="en">Mandatory if providerAnswer is hold_placed or will_supply</xs:documentation>
@@ -185,7 +185,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="oo:authentication" minOccurs="0"/>
+				<xs:element ref="oo:authentication"/>
 				<xs:element ref="oo:messageType"/>
 				<xs:element ref="oo:orderId"/>
 				<xs:element ref="oo:requesterId"/>
@@ -207,7 +207,7 @@
 	<xs:element name="shippedRequest">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="oo:authentication" minOccurs="0"/>
+				<xs:element ref="oo:authentication"/>
 				<xs:element ref="oo:creationDate" minOccurs="0"/>
 				<xs:element ref="oo:dateDue" minOccurs="0"/>
 				<xs:element ref="oo:itemId" minOccurs="0"/>
@@ -236,7 +236,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="oo:authentication" minOccurs="0"/>
+				<xs:element ref="oo:authentication"/>
 				<xs:element ref="oo:orderId"/>
 				<xs:element ref="oo:requesterId"/>
 				<xs:element ref="oo:responderId"/>
@@ -266,7 +266,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="oo:authentication" minOccurs="0"/>
+				<xs:element ref="oo:authentication"/>
 				<xs:element ref="oo:agencyId"/>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
 				<xs:element ref="oo:callback" minOccurs="0"/>
