@@ -72,7 +72,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="oo:authentication"
+				<xs:element ref="oo:authentication"/>
 				<xs:element ref="oo:articleDirect" minOccurs="0"/>
 				<xs:element ref="oo:author" minOccurs="0"/>
 				<xs:element ref="oo:authorOfComponent" minOccurs="0"/>
