@@ -4,6 +4,35 @@
 	<xs:annotation>
 		<xs:documentation xml:lang="en">This XML Schema describes the data and structure of data of the ORS order-service.</xs:documentation>
 	</xs:annotation>
+	<xs:element name="checkArticleDeliveryRequest">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Check whether articles from a journal (identified either by it's PID or bibliographic record identifier) can be delivered electronically</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="oo:authentication"/>
+				<xs:element ref="oo:pid"/>
+				<xs:element ref="oo:serviceRequester" minOccurs="0"/>
+				<xs:element ref="oo:outputType" minOccurs="0"/>
+				<xs:element ref="oo:callback" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="checkArticleDeliveryResponse">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Response indicating whether articles from a journal can be delivered electronically (true/false) and explanation why</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice>
+				<xs:sequence>
+					<xs:element ref="oo:articleDeliveryPossible"/>
+					<xs:element ref="oo:articleDeliveryPossibleReason" minOccurs="0"/>
+				    <xs:element ref="oo:articleDirect" minOccurs="0"/>
+				</xs:sequence>
+				<xs:element ref="oo:error"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="checkElectronicDeliveryRequest">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Check whether articles from a journal (identified either by it's PID or bibliographic record identifier) can be delivered electronically</xs:documentation>
@@ -289,6 +318,16 @@
     <xs:element name="agencyId" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Agency to increment counter</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="articleDeliveryPossible" type="xs:boolean">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">If true, article delivery of requested item is possible</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="articleDeliveryPossibleReason" type="oo:electronicDeliveryPossibleReasonType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Explanation why articleDeliveryPossible is true or false</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="articleDirect" type="oo:articleDirectType">
@@ -720,6 +759,7 @@
 	</xs:simpleType>
 	<xs:simpleType name="electronicDeliveryPossibleReasonType">
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="article not found"/>
 			<xs:enumeration value="issn not found"/>
 			<xs:enumeration value="no electronic supplier found"/>
 		</xs:restriction>

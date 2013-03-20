@@ -147,6 +147,74 @@ class openOrder extends webServiceServer {
     return $ret;
   }
 
+  /** \brief Check whether articles from a journal (identified by it's PID) can be delivered electronically
+   *
+   * Request:
+   * - pid
+   * - serviceRequester
+   *
+   * Response:
+   * - articleDeliveryPossible
+   * - articleDeliveryPossibleReason
+   * - articleDirect
+   * or
+   * - error
+   */
+  public function checkArticleDelivery($param) {
+    $cadr = &$ret->checkArticleDeliveryResponse->_value;
+    if (!$this->aaa->has_right('netpunkt.dk', 500)) {
+      $cadr->error->_value = 'authentication_error';
+    }
+    else {
+      $agency = '820010';  // sofar only 820010 can deliver electronically
+      if ($this->cache) {
+        $cache_key = 'OO_cad_' . $this->version . $param->serviceRequester->_value . 
+                                                  $pid . 
+                                                  $agency;
+        if ($ret = $this->cache->get($cache_key)) {
+          verbose::log(STAT, 'Cache hit');
+          return $ret;
+        }
+      }
+  // no cache, do the job
+      if ($agency <> '820010') {
+        $cadr->articleDeliveryPossible->_value = '0';
+        $cadr->articleDeliveryPossibleReason->_value = 'no electronic supplier found';
+      }
+      else {
+        if ($issn = $this->pid_to_issn($param->pid->_value)) {
+          try {
+            if ($this->find_issn_in_copydan($issn)) {
+              $cadr->articleDeliveryPossible->_value = '1';
+              $cadr->articleDirect->_value = 'electronic';
+            }
+            else {
+              $cadr->articleDeliveryPossible->_value = '1';
+              $cadr->articleDirect->_value = 'postal';
+            }
+          }
+          catch (ociException $e) {
+            $cadr->error->_value = $e->getMessage();
+          }
+        }
+        else {
+          $cadr->articleDeliveryPossible->_value = '0';
+          $cadr->articleDeliveryPossibleReason->_value = 'article not found';
+        }
+      }
+    }
+
+    if (DEBUG_ON) {
+      var_dump($cadr);
+      var_dump($param);
+    }
+
+    if ($cache_key && empty($cadr->error)) $this->cache->set($cache_key, $ret);
+
+    return $ret;
+  }
+
+
   /** \brief Check whether articles from a journal (identified by it's ISSN) can be delivered electronically
    *
    * Request:
@@ -182,22 +250,8 @@ class openOrder extends webServiceServer {
         $cedr->electronicDeliveryPossibleReason->_value = 'no electronic supplier found';
       }
       else {
-        require_once('OLS_class_lib/oci_class.php');
-        $oci = new Oci($this->config->get_value('copydan_credentials','setup'));
-        $oci->set_charset('UTF8');
         try {
-          $oci->connect();
-        }
-        catch (ociException $e) {
-          verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI connect error: ' . $oci->get_error_string());
-          $cedr->error->_value = 'service_unavailable';
-        }
-        try {
-          $oci->bind('bind_issn', $issn);
-          $oci->set_query('SELECT *
-                             FROM copydan
-                            WHERE issn = :bind_issn');
-          if ($oci->fetch_into_assoc()) {
+          if ($this->find_issn_in_copydan($issn)) {
             $cedr->electronicDeliveryPossible->_value = '1';
           }
           else {
@@ -205,11 +259,9 @@ class openOrder extends webServiceServer {
             $cedr->electronicDeliveryPossibleReason->_value = 'issn not found';
           }
         }
-        catch (ociException $e) {
-          verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI select error: ' . $oci->get_error_string());
-          $cedr->error->_value = 'service_unavailable';
+        catch (Exception $e) {
+          $cedr->error->_value = $e->getMessage();
         }
-
       }
     }
 
@@ -709,6 +761,34 @@ class openOrder extends webServiceServer {
   /*******************************************************************************/
 
 
+  /** \brief Check existance of issn in the copydan table
+   *
+   * return the found row or FALSE
+   */
+  private function find_issn_in_copydan($issn) {
+    require_once('OLS_class_lib/oci_class.php');
+    $oci = new Oci($this->config->get_value('copydan_credentials','setup'));
+    $oci->set_charset('UTF8');
+    try {
+      $oci->connect();
+    }
+    catch (ociException $e) {
+      verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI connect error: ' . $oci->get_error_string());
+      throw new Exception('service_unavailable');
+    }
+    try {
+      $oci->bind('bind_issn', $issn);
+      $oci->set_query('SELECT *
+                         FROM copydan
+                        WHERE issn = :bind_issn');
+      return $oci->fetch_into_assoc();
+    }
+    catch (ociException $e) {
+      verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI select error: ' . $oci->get_error_string());
+      throw new Exception('service_unavailable');
+    }
+  }
+
   /** \brief Checks if branch_id is part of agency_id
    *
    * return boolean
@@ -759,13 +839,17 @@ class openOrder extends webServiceServer {
     }
   }
 
-  /** \brief Return the issn for a given pid - or error
+  /** \brief Return the issn for a given pid - or FALSE
    * 
    */
   private function pid_to_issn($pid) {
     $fname = TMP_PATH .  md5($responder_id . microtime(TRUE));
     $os_obj->pid = $pid;
-    return $this->exec_order_policy($os_obj, $fname, 'pidToIssn');
+    $res = $this->exec_order_policy($os_obj, $fname, 'pidToIssn');
+    if ($res['issn'] <> 'undefined') {
+      return $res['issn'];
+    }
+    return FALSE;
   }
 
   /** \brief Check nonVerifiedIll order policy for a given Agency
@@ -898,6 +982,7 @@ class openOrder extends webServiceServer {
         $es_answer = json_decode(file_get_contents($f_out));
         unlink($f_out);
         if ($es_answer) {
+          $ret['issn'] = $es_answer->issn;
           $ret['lookUpUrl'] = $es_answer->lookupurl;
           $ret['lookUpUrls'] = $es_answer->lookupurls;
           $ret['agencyCatalogueUrl'] = $es_answer->agencyCatalogueUrl;
