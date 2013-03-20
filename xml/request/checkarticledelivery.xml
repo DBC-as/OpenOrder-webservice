@@ -1,0 +1,19 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:open="http://oss.dbc.dk/ns/openorder">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <open:checkArticleDeliveryRequest>
+         <open:authentication>
+            <open:groupIdAut>?</open:groupIdAut>
+            <open:passwordAut>?</open:passwordAut>
+            <open:userIdAut>?</open:userIdAut>
+         </open:authentication>
+         <open:pid>?</open:pid>
+         <!--Optional:-->
+         <open:serviceRequester>?</open:serviceRequester>
+         <!--Optional:-->
+         <open:outputType>?</open:outputType>
+         <!--Optional:-->
+         <open:callback>?</open:callback>
+      </open:checkArticleDeliveryRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
