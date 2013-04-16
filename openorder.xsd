@@ -95,6 +95,37 @@
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="getTaskStatusRequest">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The service request for getting status for a task</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="oo:authentication"/>
+				<xs:element ref="oo:orderId"/>
+				<xs:element ref="oo:requesterId"/>
+				<xs:element ref="oo:outputType" minOccurs="0"/>
+				<xs:element ref="oo:callback" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="getTaskStatusResponse">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The service response</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice>
+				<xs:sequence>
+                    <xs:element ref="oo:agencyCatalogueUrl" minOccurs="0"/>
+					<xs:element ref="oo:lookUpUrl" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="oo:orderPossible"/>
+					<xs:element ref="oo:orderPossibleReason" minOccurs="0"/>
+					<xs:element ref="oo:orderCondition" minOccurs="0" maxOccurs="2"/>
+				</xs:sequence>
+				<xs:element ref="oo:checkOrderPolicyError"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="placeOrderRequest">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">The service request for placing an order</xs:documentation>

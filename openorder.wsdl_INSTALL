@@ -23,6 +23,12 @@
 	<wsdl:message name="checkOrderPolicyResponse">
 		<wsdl:part name="body" element="oo:checkOrderPolicyResponse"/>
 	</wsdl:message>
+	<wsdl:message name="getTaskStatusRequest">
+		<wsdl:part name="body" element="oo:getTaskStatusRequest"/>
+	</wsdl:message>
+	<wsdl:message name="getTaskStatusResponse">
+		<wsdl:part name="body" element="oo:getTaskStatusResponse"/>
+	</wsdl:message>
 	<wsdl:message name="placeOrderRequest">
 		<wsdl:part name="body" element="oo:placeOrderRequest"/>
 	</wsdl:message>
@@ -75,6 +81,12 @@
 		<wsdl:operation name="checkOrderPolicy">
 			<wsdl:input message="oow:checkOrderPolicyRequest"/>
 			<wsdl:output message="oow:checkOrderPolicyResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="getTaskStatusPortType">
+		<wsdl:operation name="getTaskStatus">
+			<wsdl:input message="oow:getTaskStatusRequest"/>
+			<wsdl:output message="oow:getTaskStatusResponse"/>
 		</wsdl:operation>
 	</wsdl:portType>
 	<wsdl:portType name="placeOrderPortType">
@@ -133,6 +145,18 @@
 				<soap:body use="literal"/>
 			</wsdl:input>
 			<wsdl:output name="checkElectronicDeliveryResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="getTaskStatusSoapBinding" type="oow:getTaskStatusPortType">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="getTaskStatus">
+			<soap:operation soapAction="getTaskStatus"/>
+			<wsdl:input name="getTaskStatusRequest">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getTaskStatusResponse">
 				<soap:body use="literal"/>
 			</wsdl:output>
 		</wsdl:operation>
@@ -226,6 +250,9 @@
 			<soap:address location="http://openorder.addi.dk/2.3/"/>
 		</wsdl:port>
 		<wsdl:port name="checkElectronicDeliveryPortType" binding="oow:checkElectronicDeliverySoapBinding">
+			<soap:address location="http://openorder.addi.dk/2.3/"/>
+		</wsdl:port>
+		<wsdl:port name="getTaskStatusPortType" binding="oow:getTaskStatusSoapBinding">
 			<soap:address location="http://openorder.addi.dk/2.3/"/>
 		</wsdl:port>
 		<wsdl:port name="placeOrderPortType" binding="oow:placeOrderSoapBinding">

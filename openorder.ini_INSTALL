@@ -32,6 +32,7 @@ soapAction[answer] = answerRequest
 soapAction[checkArticleDelivery] = checkArticleDeliveryRequest
 soapAction[checkElectronicDelivery] = checkElectronicDeliveryRequest
 soapAction[checkOrderPolicy] = checkOrderPolicyRequest
+soapAction[getTaskStatus] = getTaskStatusRequest
 soapAction[placeOrder] = placeOrderRequest
 soapAction[resend] = resendRequest
 soapAction[shipped] = shippedRequest
@@ -188,6 +189,14 @@ action[checkOrderPolicy][] = pid
 action[checkOrderPolicy][] = serviceRequester
 action[checkOrderPolicy][] = outputType
 action[checkOrderPolicy][] = callback
+
+action[getTaskStatus][authentication][] = groupIdAut
+action[getTaskStatus][authentication][] = passwordAut
+action[getTaskStatus][authentication][] = userIdAut
+action[getTaskStatus][] = orderId
+action[getTaskStatus][] = requesterId
+action[getTaskStatus][] = outputType
+action[getTaskStatus][] = callback
 
 action[placeOrder][] = articleDirect
 action[placeOrder][authentication][] = groupIdAut
