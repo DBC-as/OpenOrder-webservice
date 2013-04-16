@@ -111,13 +111,13 @@
 	</xs:element>
 	<xs:element name="getTaskStatusResponse">
 		<xs:annotation>
-			<xs:documentation xml:lang="en">The service response</xs:documentation>
+			<xs:documentation xml:lang="en">The service response. When more than one taskStatus, they are sorted with the newest first</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:choice>
 				<xs:sequence>
                     <xs:element ref="oo:taskId"/>
-                    <xs:element ref="oo:taskStatus"/>
+                    <xs:element ref="oo:taskStatus" maxOccurs="unbounded"/>
 				</xs:sequence>
 				<xs:element ref="oo:error"/>
 			</xs:choice>

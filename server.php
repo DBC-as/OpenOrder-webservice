@@ -401,7 +401,7 @@ class openOrder extends webServiceServer {
                                     TO_CHAR(loggingtime, \'YYYY-MM-DD HH24:MI:SS\') logtime
                                FROM ors_log
                               WHERE taskid = :bind_task_id
-                              ORDER BY loggingtime');
+                              ORDER BY loggingtime DESC');
             while ($log_row = $oci->fetch_into_assoc()) {
               foreach ($log_row as $key => $val) {
                 if (is_object($val))
