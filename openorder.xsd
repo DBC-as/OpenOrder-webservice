@@ -116,13 +116,10 @@
 		<xs:complexType>
 			<xs:choice>
 				<xs:sequence>
-                    <xs:element ref="oo:agencyCatalogueUrl" minOccurs="0"/>
-					<xs:element ref="oo:lookUpUrl" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element ref="oo:orderPossible"/>
-					<xs:element ref="oo:orderPossibleReason" minOccurs="0"/>
-					<xs:element ref="oo:orderCondition" minOccurs="0" maxOccurs="2"/>
+                    <xs:element ref="oo:taskId"/>
+                    <xs:element ref="oo:taskStatus"/>
 				</xs:sequence>
-				<xs:element ref="oo:checkOrderPolicyError"/>
+				<xs:element ref="oo:error"/>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
@@ -426,6 +423,11 @@
 	</xs:element>
 	<xs:element name="creationDate" type="xs:dateTime"/>
 	<xs:element name="dateDue" type="xs:dateTime"/>
+	<xs:element name="description" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Desctiption of an error or success</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:element name="edition" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Edition-information from the bibliographic record, in orders without locations.</xs:documentation>
@@ -502,6 +504,11 @@
 	<xs:element name="localHoldingsId" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">The item.s bibliographic identifier, retrieved from local systems (e.g. via z3950 holdings request).</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="logTime" type="xs:dateTime">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Time for the status</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="lookUpUrl" type="xs:string">
@@ -691,6 +698,34 @@
 	</xs:element>
 	<xs:element name="shippedDate" type="xs:dateTime"/>
 	<xs:element name="shippedServiceType" type="oo:shippedServiceTypeType"/>
+	<xs:element name="statusCode" type="xs:integer">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">code of a task status, all but zero is an error</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="statusType" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">type of a task status, like waiting, error, done</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="taskId" type="xs:integer">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">ID of an order task</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="taskStatus">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">status of an order task</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="oo:statusCode"/>
+				<xs:element ref="oo:description"/>
+				<xs:element ref="oo:logTime"/>
+				<xs:element ref="oo:statusType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="title" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Title of the requested material.</xs:documentation>
@@ -805,6 +840,7 @@
 			<xs:enumeration value="providerAnswerReason is mandatory with specified providerAnswer"/>
 			<xs:enumeration value="service_unavailable"/>
 			<xs:enumeration value="service_error"/>
+			<xs:enumeration value="no_task_found"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="fullTextLinkTypeType">

@@ -351,6 +351,95 @@ class openOrder extends webServiceServer {
   }
 
 
+  /** \brief Check status for a given order
+   *
+   * Request:
+   * - orderId
+   * - requesterId
+   *
+   * Response:
+   * - taskId
+   * - taskStatus
+   * or
+   * - error
+   */
+  public function getTaskStatus($param) {
+    $gtsr = &$ret->getTaskStatusResponse->_value;
+    if (!$this->aaa->has_right('netpunkt.dk', 500)) {
+      $gtsr->error->_value = 'authentication_error';
+    }
+    else {
+      require_once('OLS_class_lib/oci_class.php');
+      $oci = new Oci($this->config->get_value('ors_credentials','setup'));
+      $oci->set_charset('UTF8');
+      try {
+        $oci->connect();
+      }
+      catch (ociException $e) {
+        verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI connect error: ' . $oci->get_error_string());
+        $gtsr->error->_value = 'service_unavailable';
+      }
+      try {
+        $oci->bind('bind_order_id', $param->orderId->_value);
+        $oci->bind('bind_requester_id', $param->requesterId->_value);
+        $oci->set_query('SELECT taskid, majorstate, result,
+                                TO_CHAR(lasthandledtime, \'YYYY-MM-DD HH24:MI:SS\') handletime
+                           FROM ors_task
+                          WHERE orderid = :bind_order_id
+                            AND requesterid = :bind_requester_id');
+        if ($task_row = $oci->fetch_into_assoc()) {
+          $gtsr->taskId->_value = $task_row['TASKID'];
+          if ($task_row['MAJORSTATE'] == 'done') {
+            $gtsr->taskStatus->_value->description->_value = $task_row['RESULT'];
+            $gtsr->taskStatus->_value->logTime->_value = str_replace(' ', 'T', $task_row['HANDLETIME']);
+            $gtsr->taskStatus->_value->statusCode->_value = 0;
+            $gtsr->taskStatus->_value->statusType->_value = 'done';
+          }
+          else {
+            $oci->bind('bind_task_id', $task_row['TASKID']);
+            $oci->set_query('SELECT type, statuscode, description, 
+                                    TO_CHAR(loggingtime, \'YYYY-MM-DD HH24:MI:SS\') logtime
+                               FROM ors_log
+                              WHERE taskid = :bind_task_id
+                              ORDER BY loggingtime');
+            while ($log_row = $oci->fetch_into_assoc()) {
+              foreach ($log_row as $key => $val) {
+                if (is_object($val))
+                  $log_row[$key . '_DATA'] = $val->load();
+              }
+              if ($log_row['STATUSCODE'] && ($log_row['TYPE'] <> 'waitingverbose')) {
+                if (is_object($log_row['DESCRIPTION']))
+                  $row->description->_value = $log_row['DESCRIPTION']->load();
+                $row->logTime->_value = str_replace(' ', 'T', $log_row['LOGTIME']);
+                $row->statusCode->_value = $log_row['STATUSCODE'];
+                $row->statusType->_value = $log_row['TYPE'];
+                
+                $gtsr->taskStatus[]->_value = $row;
+                unset($row);
+              }
+            }
+          }
+        }
+        else {
+          $gtsr->error->_value = 'no_task_found';
+        }
+      }
+      catch (ociException $e) {
+        verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI update error: ' . $oci->get_error_string());
+        $irss->error->_value = 'service_unavailable';
+      }
+      $irss->incrementRedirectStatStatus->_value = 'true';
+    }
+
+    if (DEBUG_ON) {
+      var_dump($gtsr);
+      var_dump($param);
+    }
+
+    return $ret;
+  }
+
+
   /** \brief Place a ubfxml order using z3950 extend service
    *
    * Request:
