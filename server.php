@@ -410,7 +410,7 @@ class openOrder extends webServiceServer {
                 if (is_object($val))
                   $log_row[$key . '_DATA'] = $val->load();
               }
-              if ($log_row['STATUSCODE'] && ($log_row['TYPE'] <> 'waitingverbose')) {
+              if ($log_row['STATUSCODE'] && (strpos($log_row['TYPE'], 'verbose') === FALSE)) {
                 if (is_object($log_row['DESCRIPTION']))
                   $row->description->_value = $log_row['DESCRIPTION']->load();
                 $row->logTime->_value = str_replace(' ', 'T', $log_row['LOGTIME']);
