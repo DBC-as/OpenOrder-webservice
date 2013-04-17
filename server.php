@@ -368,6 +368,9 @@ class openOrder extends webServiceServer {
     if (!$this->aaa->has_right('netpunkt.dk', 500)) {
       $gtsr->error->_value = 'authentication_error';
     }
+    elseif (!$this->check_library_group($param->authentication->_value->groupIdAut->_value, $param->requesterId->_value)) {
+      $gtsr->error->_value = 'operation not authorized for specified requesterId';
+    }
     else {
       require_once('OLS_class_lib/oci_class.php');
       $oci = new Oci($this->config->get_value('ors_credentials','setup'));
