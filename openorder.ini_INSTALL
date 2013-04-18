@@ -65,6 +65,9 @@ order_policy_shell = /var/www/php_exec/OrderPolicy.sh
 ; path to temp-dir where writing/reading/deleting files are allowed
 tmp_path = /tmp/
 
+; getTaskStatus regexp for orderId - if matched, requesterId is mandatory
+unique_orderId_mask = 1.........
+
 ; path to xml-examples
 xmldir = ./xml
 

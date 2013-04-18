@@ -372,66 +372,75 @@ class openOrder extends webServiceServer {
       $gtsr->error->_value = 'operation not authorized for specified requesterId';
     }
     else {
-      require_once('OLS_class_lib/oci_class.php');
-      $oci = new Oci($this->config->get_value('ors_credentials','setup'));
-      $oci->set_charset('UTF8');
-      try {
-        $oci->connect();
+      $orderId_mask = $this->config->get_value('unique_orderId_mask','setup');
+      if (empty($param->requesterId->_value)
+       && $orderId_mask
+       && !preg_match('/^'.$orderId_mask.'$/', $param->orderId->_value)) {
+        $gtsr->error->_value = 'requesterId should be specified for the given orderId';
       }
-      catch (ociException $e) {
-        verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI connect error: ' . $oci->get_error_string());
-        $gtsr->error->_value = 'service_unavailable';
-      }
-      try {
-        $oci->bind('bind_order_id', $param->orderId->_value);
-        $oci->bind('bind_requester_id', $param->requesterId->_value);
-        $oci->set_query('SELECT taskid, majorstate, result,
-                                TO_CHAR(lasthandledtime, \'YYYY-MM-DD HH24:MI:SS\') handletime
-                           FROM ors_task
-                          WHERE orderid = :bind_order_id
-                            AND requesterid = :bind_requester_id');
-        if ($task_row = $oci->fetch_into_assoc()) {
-          $gtsr->taskId->_value = $task_row['TASKID'];
-          if ($task_row['MAJORSTATE'] == 'done') {
-            $gtsr->taskStatus->_value->description->_value = $task_row['RESULT'];
-            $gtsr->taskStatus->_value->logTime->_value = str_replace(' ', 'T', $task_row['HANDLETIME']);
-            $gtsr->taskStatus->_value->statusCode->_value = 0;
-            $gtsr->taskStatus->_value->statusType->_value = 'done';
+      else {
+        require_once('OLS_class_lib/oci_class.php');
+        $oci = new Oci($this->config->get_value('ors_credentials','setup'));
+        $oci->set_charset('UTF8');
+        try {
+          $oci->connect();
+        }
+        catch (ociException $e) {
+          verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI connect error: ' . $oci->get_error_string());
+          $gtsr->error->_value = 'service_unavailable';
+        }
+        try {
+          $oci->bind('bind_order_id', $param->orderId->_value);
+          if ($param->requesterId->_value) {
+            $oci->bind('bind_requester_id', $param->requesterId->_value);
+            $add_sql = ' AND requesterid = :bind_requester_id';
           }
-          else {
-            $oci->bind('bind_task_id', $task_row['TASKID']);
-            $oci->set_query('SELECT type, statuscode, description, 
-                                    TO_CHAR(loggingtime, \'YYYY-MM-DD HH24:MI:SS\') logtime
-                               FROM ors_log
-                              WHERE taskid = :bind_task_id
-                              ORDER BY loggingtime DESC');
-            while ($log_row = $oci->fetch_into_assoc()) {
-              foreach ($log_row as $key => $val) {
-                if (is_object($val))
-                  $log_row[$key . '_DATA'] = $val->load();
-              }
-              if ($log_row['STATUSCODE'] && (strpos($log_row['TYPE'], 'verbose') === FALSE)) {
-                if (is_object($log_row['DESCRIPTION']))
-                  $row->description->_value = $log_row['DESCRIPTION']->load();
-                $row->logTime->_value = str_replace(' ', 'T', $log_row['LOGTIME']);
-                $row->statusCode->_value = $log_row['STATUSCODE'];
-                $row->statusType->_value = $log_row['TYPE'];
-                
-                $gtsr->taskStatus[]->_value = $row;
-                unset($row);
+          $oci->set_query('SELECT taskid, majorstate, result,
+                                  TO_CHAR(lasthandledtime, \'YYYY-MM-DD HH24:MI:SS\') handletime
+                             FROM ors_task
+                            WHERE orderid = :bind_order_id ' . $add_sql);
+          if ($task_row = $oci->fetch_into_assoc()) {
+            $gtsr->taskId->_value = $task_row['TASKID'];
+            if ($task_row['MAJORSTATE'] == 'done') {
+              $gtsr->taskStatus->_value->description->_value = $task_row['RESULT'];
+              $gtsr->taskStatus->_value->logTime->_value = str_replace(' ', 'T', $task_row['HANDLETIME']);
+              $gtsr->taskStatus->_value->statusCode->_value = 0;
+              $gtsr->taskStatus->_value->statusType->_value = 'done';
+            }
+            else {
+              $oci->bind('bind_task_id', $task_row['TASKID']);
+              $oci->set_query('SELECT type, statuscode, description, 
+                                      TO_CHAR(loggingtime, \'YYYY-MM-DD HH24:MI:SS\') logtime
+                                 FROM ors_log
+                                WHERE taskid = :bind_task_id
+                                ORDER BY loggingtime DESC');
+              while ($log_row = $oci->fetch_into_assoc()) {
+                foreach ($log_row as $key => $val) {
+                  if (is_object($val))
+                    $log_row[$key . '_DATA'] = $val->load();
+                }
+                if ($log_row['STATUSCODE'] && (strpos($log_row['TYPE'], 'verbose') === FALSE)) {
+                  if (is_object($log_row['DESCRIPTION']))
+                    $row->description->_value = $log_row['DESCRIPTION']->load();
+                  $row->logTime->_value = str_replace(' ', 'T', $log_row['LOGTIME']);
+                  $row->statusCode->_value = $log_row['STATUSCODE'];
+                  $row->statusType->_value = $log_row['TYPE'];
+                  
+                  $gtsr->taskStatus[]->_value = $row;
+                  unset($row);
+                }
               }
             }
           }
+          else {
+            $gtsr->error->_value = 'no_task_found';
+          }
         }
-        else {
-          $gtsr->error->_value = 'no_task_found';
+        catch (ociException $e) {
+          verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI update error: ' . $oci->get_error_string());
+          $irss->error->_value = 'service_unavailable';
         }
       }
-      catch (ociException $e) {
-        verbose::log(FATAL, 'OpenOrder('.__LINE__.'):: OCI update error: ' . $oci->get_error_string());
-        $irss->error->_value = 'service_unavailable';
-      }
-      $irss->incrementRedirectStatStatus->_value = 'true';
     }
 
     if (DEBUG_ON) {

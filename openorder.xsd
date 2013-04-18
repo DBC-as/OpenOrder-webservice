@@ -103,7 +103,7 @@
 			<xs:sequence>
 				<xs:element ref="oo:authentication"/>
 				<xs:element ref="oo:orderId"/>
-				<xs:element ref="oo:requesterId"/>
+				<xs:element ref="oo:requesterId" minOccurs="0"/>
 				<xs:element ref="oo:outputType" minOccurs="0"/>
 				<xs:element ref="oo:callback" minOccurs="0"/>
 			</xs:sequence>
@@ -838,6 +838,7 @@
 			<xs:enumeration value="operation not authorized for specified responderId"/>
 			<xs:enumeration value="invalid_order"/>
 			<xs:enumeration value="providerAnswerReason is mandatory with specified providerAnswer"/>
+			<xs:enumeration value="requesterId should be specified for the given orderId"/>
 			<xs:enumeration value="service_unavailable"/>
 			<xs:enumeration value="service_error"/>
 			<xs:enumeration value="no_task_found"/>
